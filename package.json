@@ -1,0 +1,63 @@
+{
+  "name": "gateway nuha",
+  "version": "1.0.0",
+  "description": "backend for gateway nuha",
+  "main": "app.js",
+  "author": "nuha",
+  "private": true,
+  "license": "ISC",
+  "scripts": {
+    "start": "node ./app.js",
+    "dev": " nodemon app.js",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@amoutonbrady/lz-string": "^0.1.0",
+    "@socket.io/redis-adapter": "^8.3.0",
+    "axios": "^1.13.2",
+    "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.2",
+    "connect-redis": "^9.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "dotenv": "^17.2.3",
+    "exceljs": "^4.4.0",
+    "express": "^5.2.1",
+    "express-fileupload": "^1.5.2",
+    "express-session": "^1.18.2",
+    "fs": "^0.0.1-security",
+    "helmet": "^8.1.0",
+    "hpp": "^0.2.3",
+    "jsonwebtoken": "^9.0.3",
+    "lint-staged": "^16.2.7",
+    "lz-string": "^1.5.0",
+    "minio": "^8.0.6",
+    "moment": "^2.30.1",
+    "moment-timezone": "^0.6.0",
+    "morgan": "^1.10.1",
+    "nodemon": "^3.1.11",
+    "path": "^0.12.7",
+    "pg": "^8.16.3",
+    "pg-hstore": "^2.3.4",
+    "redis": "^5.10.0",
+    "sequelize": "^6.37.7",
+    "socket.io": "^4.8.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.8.0",
+    "@stylistic/eslint-plugin-js": "^2.6.1",
+    "eslint": "^9.8.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.9.0",
+    "husky": "^9.1.4",
+    "sequelize-cli": "^6.6.2"
+  },
+  "lint-staged": {
+    "*.{js}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
+}
