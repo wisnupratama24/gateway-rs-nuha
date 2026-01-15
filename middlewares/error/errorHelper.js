@@ -1,4 +1,4 @@
-const { errorServer, error203, error404, error204, error403, error400, error401 } = require("../../helpers/response/responseHelper");
+const { errorServer, error404, error204, error403, error400, error401 } = require("../../helpers/response/responseHelper");
 const { DataDuplicateError, ValidationError, ForbiddenError, UnauthorizedError, RequiredError, DataNotFoundError, ErrorInFunction, axiosErrorHelper } = require("../../helpers/error");
 const { APP_AREA, APP_ENV } = require("../../helpers/env/env.config");
 async function ErrorHandler(error, req, res, next) {
@@ -13,7 +13,7 @@ async function ErrorHandler(error, req, res, next) {
 			let data_error = errorServer({ error });
 			return res.status(500).json(data_error);
 		} else if (error instanceof ValidationError) {
-			let data_error = error203({ message: error.message, data: error?.data });
+			let data_error = error400({ message: error.message, error: error?.data });
 			return res.status(400).json(data_error); // 400 Bad Request
 		} else if (error instanceof DataNotFoundError) {
 			let data_error = error404({ message: error.message });
