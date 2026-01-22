@@ -36,4 +36,7 @@ module.exports = {
 	RATE_LIMIT_LOGIN_MAX: parseInt(process.env.RATE_LIMIT_LOGIN_MAX) || 5, // Default: 5 login attempts per window
 	// Body Parser Configuration
 	BODY_PARSER_LIMIT: process.env.BODY_PARSER_LIMIT || "10mb", // Default: 10mb
+	X_API_KEY: process.env.X_API_KEY,
+	TOKEN: process.env.TOKEN,
+	REFRESH_TOKEN: process.env.REFRESH_TOKEN
 };
