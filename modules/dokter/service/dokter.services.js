@@ -23,7 +23,7 @@ class DokterService {
 				// Gunakan nama field sesuai cURL yang valid
 				filter_tanggal_awal: filter_tanggal_awal,
 				filter_tanggal_akhir: filter_tanggal_akhir,
-				id_dokter: params.id_dokter || null,
+				id_dokter: parseInt(params.id_dokter) || null,
 				kode_spesialis: params.kode_spesialis || null,
 			};
 
