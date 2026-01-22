@@ -11,15 +11,12 @@ exports.executeSelectQuery = async (querystring) => {
 	}
 };
 
-exports.queryReplacement = async (querystring, replacements = {}) => {
-	try {
-		return await DB.query(querystring, {
-			replacements,
-			type: QueryTypes.RAW,
-		});
-	} catch (error) {
-		throw error;
-	}
+exports.queryReplacement = async (querystring, replacements = {}, transaction = null) => {
+	return DB.query(querystring, {
+		replacements,
+		type: QueryTypes.RAW,
+		transaction,
+	});
 };
 
 exports.queryRawReplace = async (querystring, replacements = {}) => {
@@ -47,17 +44,9 @@ exports.startTransaction = async () => {
 };
 
 exports.commitTransaction = async (transaction) => {
-	try {
-		await transaction.commit();
-	} catch (error) {
-		throw error;
-	}
+	await transaction.commit();
 };
 
 exports.rollbackTransaction = async (transaction) => {
-	try {
-		await transaction.rollback();
-	} catch (error) {
-		throw error;
-	}
+	await transaction.rollback();
 };
