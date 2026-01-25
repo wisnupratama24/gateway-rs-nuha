@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { EXTERNAL_API_URL, EXTERNAL_API_TOKEN, EXTERNAL_API_KEY } = require("../../../helpers/env/env.config");
+const { EXTERNAL_API_URL, EXTERNAL_API_TOKEN, EXTERNAL_API_KEY } = require("../../../helpers/env/envConfig");
 
 /**
  * Utility untuk mengambil data dari API Eksternal.
@@ -40,6 +40,7 @@ class DashboardUtil {
 			const response = await axios.post(url, body, config);
 			return response.data; // Return full x	response { data, meta_data }
 		} catch (error) {
+			console.log(error);
 			console.error("[DashboardUtil] Error fetching external data:", error.message);
 			// Lempar error agar bisa dihandle service
 			throw new Error("Gagal mengambil data dari API Eksternal. Cek koneksi atau token.");

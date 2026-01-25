@@ -1,4 +1,4 @@
-const authReguler = require("./auth_reguler");
+const authRegular = require("./authRegular");
 
 async function authHandler(req, res, next) {
 	try {
@@ -6,7 +6,7 @@ async function authHandler(req, res, next) {
 			// If headers have already been sent, just call the next middleware
 			return next();
 		} else {
-			await authReguler.authRegulerHandler(req, res, next);
+			await authRegular.authRegularHandler(req, res, next);
 		}
 	} catch (error) {
 		next(error);

@@ -1,8 +1,8 @@
 const { ForbiddenError, ErrorInFunction } = require("../error");
 const CryptoJS = require("crypto-js");
-const { KEY_ENCRYPT } = require("../env/env.config");
+const { KEY_ENCRYPT } = require("../env/envConfig");
 
-class Enkripsi {
+class Encryption {
 	static async encodingToken({ data }) {
 		try {
 			if (!KEY_ENCRYPT || KEY_ENCRYPT.length < 16) {
@@ -114,4 +114,4 @@ class Enkripsi {
 	}
 }
 
-module.exports = Enkripsi;
+module.exports = Encryption;

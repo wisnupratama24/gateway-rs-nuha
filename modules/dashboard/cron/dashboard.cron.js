@@ -1,4 +1,4 @@
-const { addCronJob } = require("../../../helpers/cronJob/cronjobCronjobConfig");
+const { addCronJob } = require("../../../helpers/cronJob/cronjobConfig");
 const generateCronExpression = require("../../../helpers/cronJob/generatorCronjob");
 const { TIME_UNITS } = require("../../../helpers/cronJob/cronjobConstants");
 const DashboardService = require("../service/dashboard.service");

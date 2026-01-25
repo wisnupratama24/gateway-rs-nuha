@@ -1,5 +1,5 @@
 const MOMENT = require("moment");
-const CUSTOM = require("../others/custom");
+const CUSTOM = require("../utils/custom");
 
 class CrudAddition {
 	static helper_create(req) {
