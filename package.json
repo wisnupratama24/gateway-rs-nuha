@@ -20,6 +20,8 @@
     "connect-redis": "^9.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "cron": "^4.4.0",
+    "cron-time-generator": "^2.0.3",
     "debug": "~2.6.9",
     "dotenv": "^17.2.3",
     "exceljs": "^4.4.0",

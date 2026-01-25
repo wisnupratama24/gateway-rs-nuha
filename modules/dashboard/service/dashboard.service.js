@@ -1,6 +1,7 @@
-const dbHelper = require("../../../config/db/helper/dbHelper");
 const DashboardUtil = require("../util/dashboard.util");
 const moment = require("moment");
+// Import Model (Updated to dashboard_123)
+const ModelDashboard123 = require("../../../models/dashboard/dashboard_123.model");
 
 /**
  * Service untuk Modul Dashboard & Sinkronisasi.
@@ -11,19 +12,18 @@ class DashboardService {
 	 * Memicu proses sinkronisasi data dari API Eksternal ke DB Lokal.
 	 * Alur:
 	 * 1. Loop halaman (Pagination) sampai semua data terambil.
-	 * 2. Upsert (Insert/Update) ke database lokal untuk mencegah duplikasi.
+	 * 2. Upsert (Insert/Update) ke database lokal menggunakan Sequelize Model.
 	 */
 	static async syncData() {
 		const stats = { inserted: 0, updated: 0, total_fetched: 0 };
 
-		// Setup Range Tanggal (Misal: Hari ini sampai 7 hari kedepan, atau sesuai kebutuhan user)
-		// Default: H-1 sampai H+7 agar cover data yang mungkin berubah
+		// Setup Range Tanggal (User preferensi: 30 hari kedepan)
 		const startDate = moment().format("YYYY-MM-DD") + "T00:00:00+00:00";
-		const endDate = moment().add(30, "days").format("YYYY-MM-DD") + "T23:59:59+00:00";
+		const endDate = moment().add(14, "days").format("YYYY-MM-DD") + "T23:59:59+00:00";
 
 		let page = 1;
-		let totalPages = 1; // Akan diupdate setelah hit pertama
-		const limit = 10; // Bisa diperbesar jika performa API eksternal bagus
+		let totalPages = 1;
+		const limit = 10;
 
 		console.log(`[Sync] Memulai sinkronisasi data jadwal...`);
 
@@ -33,19 +33,18 @@ class DashboardService {
 				console.log(`[Sync] Mengambil halaman ${page} dari ${totalPages}...`);
 
 				// 1. Ambil Data dari Utils
-				const response = await Promise.resolve(
-					DashboardUtil.fetchDataFromExternal({
-						pages: page,
-						limit: limit,
-						tanggal_awal: startDate,
-						tanggal_akhir: endDate,
-					}),
-				);
+				const response = await DashboardUtil.fetchDataFromExternal({
+					pages: page,
+					limit: limit,
+					tanggal_awal: startDate,
+					tanggal_akhir: endDate,
+				});
 
 				// Update Total Pages di iterasi pertama
-				if (page === 1 && response.meta_data) {
-					console.log("[Sync] Response Meta Data:", response.data.meta_data);
-					const count = response.data.meta_data.count || 0;
+				if (page === 1) {
+					// Fallback check untuk lokasi meta_data
+					const metaData = response.data?.meta_data || response.meta_data || {};
+					const count = metaData.count || 0;
 					totalPages = Math.ceil(count / limit);
 					console.log(`[Sync] Total data ditemukan: ${count} (${totalPages} halaman)`);
 				}
@@ -53,18 +52,16 @@ class DashboardService {
 				const listJadwal = response.data?.list || [];
 				stats.total_fetched += listJadwal.length;
 
-				// 2. Proses Upsert ke Database
+				// 2. Proses Upsert ke Database menggunakan Model Sequelize
 				for (const jadwal of listJadwal) {
 					await this.upsertJadwal(jadwal, stats);
 				}
 
-				page++; // Lanjut ke halaman berikutnya
-
-				// Jeda 200ms agar friendly ke server tujuan
+				page++;
 				await new Promise((resolve) => setTimeout(resolve, 200));
 			}
 
-			console.log(`[Sync] Selesai. Total Insert: ${stats.inserted}, Update: ${stats.updated}`);
+			console.log(`[Sync] Selesai. Total Insert/Update: ${stats.updated}`);
 			return stats;
 		} catch (error) {
 			console.error("[Sync] Error fatal:", error);
@@ -73,44 +70,37 @@ class DashboardService {
 	}
 
 	/**
-	 * Helper Private untuk melakukan UPSERT ke tabel dashboard_123.
+	 * Helper Private untuk melakukan UPSERT menggunakan Sequelize Model.
 	 */
 	static async upsertJadwal(jadwal, stats) {
-		// Query Upsert PostgreSQL
-		// Jika konflik (id_dokter, tanggal, jam_mulai), lakukan UPDATE. Jika tidak, INSERT.
-		const query = `
-            INSERT INTO public.dashboard_123 
-            (id_dokter, nama_dokter, kode_spesialis, nama_spesialis, tanggal, hari, jam_mulai, jam_selesai, status_praktik, updated_at, last_synced_at)
-            VALUES 
-            (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
-            ON CONFLICT (id_dokter, tanggal, jam_mulai) 
-            DO UPDATE SET 
-                nama_dokter = EXCLUDED.nama_dokter,
-                status_praktik = EXCLUDED.status_praktik,
-                jam_selesai = EXCLUDED.jam_selesai,
-                updated_at = NOW(),
-                last_synced_at = NOW()
-        `;
-
-		const values = [
-			jadwal.id_dokter,
-			jadwal.nama_dokter,
-			jadwal.kode_spesialis,
-			jadwal.nama_spesialis,
-			jadwal.tanggal_char, // Format YYYY-MM-DD
-			jadwal.day_name,
-			jadwal.time_start,
-			jadwal.time_finish,
-			jadwal.status_praktik,
-		];
-		console.log(`[Sync] Memproses jadwal dokter ${jadwal.nama_dokter} pada ${jadwal.tanggal_char}...`);
 		try {
-			await dbHelper.queryReplacement(query, values);
-			// Catatan: dbHelper mungkin return sesuatu, disini kita asumsi sukses = data processed
-			// Secara ideal kita cek return value untuk tahu insert vs update, tp simplify dulu.
-			stats.updated++;
+			// Mapping data API ke field Model
+			const dataToSave = {
+				id_dokter: jadwal.id_dokter,
+				tanggal: jadwal.tanggal_char, // YYYY-MM-DD
+				jam_mulai: jadwal.time_start, // Key unique gabungan
+
+				nama_dokter: jadwal.nama_dokter,
+				kode_spesialis: jadwal.kode_spesialis,
+				nama_spesialis: jadwal.nama_spesialis,
+				hari: jadwal.day_name,
+				jam_selesai: jadwal.time_finish,
+				status_praktik: jadwal.status_praktik,
+
+				// Timestamp update manual karena kita pakai upsert
+				updated_at: new Date(),
+				last_synced_at: new Date(),
+			};
+
+			// Sequelize Upsert
+			const [, created] = await ModelDashboard123.upsert(dataToSave);
+
+			if (created) {
+				stats.inserted++;
+			} else {
+				stats.updated++;
+			}
 		} catch (error) {
-			console.error(error);
 			console.error(`[Sync] Gagal simpan record dokter ${jadwal.nama_dokter}:`, error.message);
 		}
 	}
@@ -119,34 +109,34 @@ class DashboardService {
 	 * Mengambil Data Dashboard dalam Format JSON Spesifik.
 	 */
 	static async getDashboardStats(tanggal) {
-		const today = tanggal || moment().add(1, "days").format("YYYY-MM-DD");
+		// User preferensi: Tanggal parameter atau besok (H+1) defaultnya
+		const targetDate = tanggal || moment().add(1, "days").format("YYYY-MM-DD");
 
-		// Ambil semua data hari ini dari lokal DB
-		const query = `
-            SELECT * FROM public.dashboard_123 
-            WHERE to_char(tanggal, 'YYYY-MM-DD') = '${today}'
-        `;
+		// Ambil data menggunakan Model.findAll
+		const rows = await ModelDashboard123.findAll({
+			where: {
+				tanggal: targetDate,
+			},
+			raw: true,
+		});
 
-		const rows = await dbHelper.executeSelectQuery(query);
-		console.log(`[Dashboard] Data ditemukan untuk tanggal ${today}: ${rows.length} records.`);
 		// Inisialisasi Sets dan Maps untuk Aggregasi Data
 		let doctorsTotal = new Set();
 		let doctorsPracticing = new Set();
-		let doctorsOnLeave = new Set(); // Jika status berisi 'Cuti' / 'Libur'
+		let doctorsOnLeave = new Set();
 
 		let bookingByDocMap = {};
 		let bookingBySpecMap = {};
 		let practiceBySpecMap = {};
 
-		// Loop Data Raw SQL -> Aggregation Logic
+		// Loop Data -> Aggregation Logic
 		rows.forEach((row) => {
 			// 1. Hitung Total Dokter (Unique)
 			doctorsTotal.add(row.id_dokter);
 
 			// 2. Cek Status Praktik
-			// Sesuaikan string 'Praktik' dengan data riil dari API
-			if (row.status_praktik?.toLowerCase().includes("tidak praktik")) {
-				// Asumsi non-praktik = cuti/libur/tutup
+			// Logic User: jika contains 'tidak praktik', masuk onLeave
+			if (row.status_praktik && row.status_praktik.toLowerCase().includes("tidak praktik")) {
 				doctorsOnLeave.add(row.id_dokter);
 			} else {
 				doctorsPracticing.add(row.id_dokter);
@@ -156,11 +146,10 @@ class DashboardService {
 					practiceBySpecMap[row.nama_spesialis] = {
 						specialization: row.nama_spesialis,
 						doctors: new Set(),
-						doctorList: [], // Kita pakai Set untuk unique ID dulu, nanti convert
+						doctorList: [],
 					};
 				}
 
-				// Cek duplikasi dokter di list spesialis ini
 				const specGroup = practiceBySpecMap[row.nama_spesialis];
 				if (!specGroup.doctors.has(row.id_dokter)) {
 					specGroup.doctors.add(row.id_dokter);
@@ -168,10 +157,8 @@ class DashboardService {
 				}
 			}
 
-			// 3. Hitung Booking (Sementara 0 atau count slot)
-			// Asumsi: Row jadwal = slot yang tersedia? atau sekedar jadwal?
-			// Sesuai request user: field 'bookings' disediakan walau data mungkin 0.
-			const bookingCount = 0; // Default 0
+			// 3. Hitung Booking (Default 0)
+			const bookingCount = 0;
 
 			// Per Dokter
 			if (!bookingByDocMap[row.id_dokter]) {
@@ -195,7 +182,7 @@ class DashboardService {
 
 		// Formatting Hasil Akhir ke JSON
 		return {
-			date: today,
+			date: targetDate,
 			generatedAt: moment().format(),
 			totals: {
 				doctorsTotal: doctorsTotal.size,
@@ -207,7 +194,7 @@ class DashboardService {
 			bookingBySpecialization: Object.values(bookingBySpecMap),
 			practicingBySpecialization: Object.values(practiceBySpecMap).map((item) => ({
 				specialization: item.specialization,
-				doctors: item.doctors.size, // Jumlah count
+				doctors: item.doctors.size,
 				doctorList: item.doctorList,
 			})),
 		};
