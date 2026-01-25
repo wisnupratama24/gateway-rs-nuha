@@ -59,26 +59,27 @@ APP.use(MORGAN(":remote-user [:date[web]] - :method :url :status :res[content-le
 // CORS configuration - lebih ketat untuk security
 const corsOptions = {
 	origin: function (origin, callback) {
-		// Allow requests with no origin (mobile apps, Postman, etc.)
+		// Allow requests with no origin (like mobile apps, Postman, or curl)
 		if (!origin) return callback(null, true);
 
-		// If ALLOWED_ORIGINS is set, use whitelist
-		if (ALLOWED_ORIGINS && ALLOWED_ORIGINS.length > 0) {
-			if (ALLOWED_ORIGINS.indexOf(origin) !== -1) {
-				callback(null, true);
-			} else {
-				callback(new Error("Not allowed by CORS"));
-			}
-		} else {
-			// If not set, allow all origins (development mode)
+		// If ALLOWED_ORIGINS is not configured, allow all origins (development only)
+		if (!ALLOWED_ORIGINS || ALLOWED_ORIGINS.length === 0) {
+			console.warn("⚠️  CORS: ALLOWED_ORIGINS not configured, allowing all origins (not recommended for production)");
+			return callback(null, true);
+		}
+
+		if (ALLOWED_ORIGINS.includes(origin)) {
 			callback(null, true);
+		} else {
+			console.error(`❌ CORS blocked: ${origin}. Allowed origins: ${ALLOWED_ORIGINS.join(", ")}`);
+			callback(new Error(`CORS blocked: ${origin}`));
 		}
 	},
 	credentials: true,
 	methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-	allowedHeaders: ["Content-Type", "Authorization", "token", "X-API-Key", "X-Requested-With"],
-	exposedHeaders: ["Content-Range", "X-Content-Range"],
-	maxAge: 86400, // 24 hours
+	allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "X-API-Key"],
+	exposedHeaders: ["Content-Type", "Authorization"],
+	optionsSuccessStatus: 200, // Some legacy browsers (IE11) choke on 204
 };
 
 APP.use(CORS(corsOptions));
