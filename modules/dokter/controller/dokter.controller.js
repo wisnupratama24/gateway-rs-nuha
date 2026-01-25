@@ -1,5 +1,5 @@
 const { successList } = require("../../../helpers/response/responseHelper");
-const DokterService = require("../service/dokter.services");
+const DokterService = require("../service/dokter.service");
 class DokterController {
 	static listJadwalDokter(id_laporan_view) {
 		return async (req, res, next) => {

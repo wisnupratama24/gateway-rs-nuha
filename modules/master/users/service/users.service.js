@@ -1,10 +1,10 @@
 const modelUser = require("../../../../models/master/ms_users/ms_users.model");
 const dbHelper = require("../../../../config/db/helper/dbHelper");
 const userUtil = require("../util/users.util");
-const encryptPassword = require("../../../../helpers/others/password");
+const encryptPassword = require("../../../../helpers/utils/password");
 const { DataDuplicateError } = require("../../../../helpers/error");
 const crudOperation = require("../../../../helpers/models/crudOperationHelper");
-const { MAX_PASSWORD_DAYS } = require("../../../../helpers/env/env.config");
+const { MAX_PASSWORD_DAYS } = require("../../../../helpers/env/envConfig");
 const moment = require("moment");
 class UserService {
 	static async getAllUsersService({ sort_key, sort_by, limit, offset, where = "" }) {

@@ -10,7 +10,7 @@ export default [
 		languageOptions: { sourceType: "commonjs", globals: { ...globals.node, ...globals.browser }},
 	},
 	{
-		ignores: ["helpers/env/env.config.js", "generateJsConfig.js", "aliases.js", "eslint.config.mjs"],
+		ignores: ["helpers/env/envConfig.js", "generateJsConfig.js", "aliases.js", "eslint.config.mjs"],
 	},
 	pluginJs.configs.recommended,
 	{

@@ -19,7 +19,7 @@ const APP = EXPRESS();
 const HTTP = require("http");
 const SERVER = HTTP.createServer(APP);
 const WEB_SOCKET = require("./config/socket/index");
-const { PORT_EXPRESS, KEY_JWT, ALLOWED_ORIGINS, ALLOWED_IPS, HTTPS_ONLY, BODY_PARSER_LIMIT } = require("./helpers/env/env.config");
+const { PORT_EXPRESS, KEY_JWT, ALLOWED_ORIGINS, ALLOWED_IPS, HTTPS_ONLY, BODY_PARSER_LIMIT } = require("./helpers/env/envConfig");
 
 const PORT = PORT_EXPRESS || 999;
 

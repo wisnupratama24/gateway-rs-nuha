@@ -1,7 +1,7 @@
 const DashboardUtil = require("../util/dashboard.util");
 const moment = require("moment");
-// Import Model (Updated to dashboard_123)
-const ModelDashboard123 = require("../../../models/dashboard/dashboard_123.model");
+// Import Model
+const ModelDashboard123 = require("../../../models/dashboard/dashboard.model");
 
 /**
  * Service untuk Modul Dashboard & Sinkronisasi.

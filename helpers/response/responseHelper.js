@@ -1,4 +1,4 @@
-const CONSTANTS = require("../constants/constantsResponseHelper");
+const CONSTANTS = require("../constants/responseConstants");
 
 class FormatResponse {
 	// 200

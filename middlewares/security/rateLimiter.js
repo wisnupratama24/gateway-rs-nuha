@@ -1,6 +1,6 @@
 const { CLIENT_1 } = require("../../config/redis/index");
-const { RATE_LIMIT_ENABLED, RATE_LIMIT_WINDOW_MS, RATE_LIMIT_MAX, RATE_LIMIT_LOGIN_MAX } = require("../../helpers/env/env.config");
-const getClientIp = require("../../helpers/others/getClientIp");
+const { RATE_LIMIT_ENABLED, RATE_LIMIT_WINDOW_MS, RATE_LIMIT_MAX, RATE_LIMIT_LOGIN_MAX } = require("../../helpers/env/envConfig");
+const getClientIp = require("../../helpers/utils/getClientIp");
 const crypto = require("crypto");
 
 /**
