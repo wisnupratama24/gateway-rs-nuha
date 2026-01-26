@@ -1,203 +1,285 @@
-const DashboardUtil = require("../util/dashboard.util");
 const moment = require("moment");
-// Import Model (Updated to dashboard_123)
-const ModelDashboard123 = require("../../../models/dashboard/dashboard_123.model");
+const { DB } = require("../../../config/db/index");
 
 /**
- * Service untuk Modul Dashboard & Sinkronisasi.
- * Menangani logika bisnis untuk menarik data eksternal dan menyajikan statistik.
+ * ========================================
+ * DASHBOARD SERVICE (Pure SQL Optimized)
+ * ========================================
+ *
+ * Service untuk generate dashboard stats dengan pure raw SQL.
+ * Menggabungkan data dari dashboard_123 (jadwal dokter) dan dashboard_239 (booking pasien).
+ *
+ * KENAPA RAW SQL?
+ * - Avoid ORM overhead (tidak load semua data ke memory)
+ * - Database-level aggregation (GROUP BY, COUNT, JOIN di PostgreSQL)
+ * - Optimal untuk large datasets
+ * - Single query per stats (minimized round trips)
+ *
+ * RELASI TABEL:
+ * dashboard_123 (jadwal dokter) LEFT JOIN dashboard_239 (booking)
+ * ON id_dokter + tanggal
+ *
+ * OUTPUT FORMAT:
+ * {
+ *   date: "2026-01-22",
+ *   generatedAt: "2026-01-22T10:15:30+07:00",
+ *   totals: { doctorsTotal, doctorsPracticing, ... },
+ *   bookingByDoctor: [...],
+ *   bookingBySpecialization: [...],
+ *   practicingBySpecialization: [...]
+ * }
  */
 class DashboardService {
 	/**
-	 * Memicu proses sinkronisasi data dari API Eksternal ke DB Lokal.
-	 * Alur:
-	 * 1. Loop halaman (Pagination) sampai semua data terambil.
-	 * 2. Upsert (Insert/Update) ke database lokal menggunakan Sequelize Model.
+	 * ========================================
+	 * MAIN METHOD: Get Dashboard Stats
+	 * ========================================
+	 *
+	 * Mengambil statistik dashboard untuk tanggal tertentu.
+	 * Semua data di-aggregate di database level (pure SQL).
+	 *
+	 * @param {string} tanggal - Format: YYYY-MM-DD (optional, default: hari ini)
+	 * @returns {object} Dashboard stats
 	 */
-	static async syncData() {
-		const stats = { inserted: 0, updated: 0, total_fetched: 0 };
+	static async getDashboardStats(tanggal) {
+		// -------------------------------------
+		// STEP 1: Setup Target Date
+		// -------------------------------------
+		const targetDate = tanggal || moment().format("YYYY-MM-DD");
 
-		// Setup Range Tanggal (User preferensi: 30 hari kedepan)
-		const startDate = moment().format("YYYY-MM-DD") + "T00:00:00+00:00";
-		const endDate = moment().add(14, "days").format("YYYY-MM-DD") + "T23:59:59+00:00";
-
-		let page = 1;
-		let totalPages = 1;
-		const limit = 10;
-
-		console.log(`[Sync] Memulai sinkronisasi data jadwal...`);
+		console.log(`[DashboardService] Generating dashboard stats for: ${targetDate}`);
 
 		try {
-			// LOOP PAGINATION
-			while (page <= totalPages) {
-				console.log(`[Sync] Mengambil halaman ${page} dari ${totalPages}...`);
+			// -------------------------------------
+			// STEP 2: Query Totals (Dokter Counts)
+			// -------------------------------------
+			const totals = await this._getTotals(targetDate);
 
-				// 1. Ambil Data dari Utils
-				const response = await DashboardUtil.fetchDataFromExternal({
-					pages: page,
-					limit: limit,
-					tanggal_awal: startDate,
-					tanggal_akhir: endDate,
-				});
+			// -------------------------------------
+			// STEP 3: Query Booking by Doctor
+			// -------------------------------------
+			const bookingByDoctor = await this._getBookingByDoctor(targetDate);
 
-				// Update Total Pages di iterasi pertama
-				if (page === 1) {
-					// Fallback check untuk lokasi meta_data
-					const metaData = response.data?.meta_data || response.meta_data || {};
-					const count = metaData.count || 0;
-					totalPages = Math.ceil(count / limit);
-					console.log(`[Sync] Total data ditemukan: ${count} (${totalPages} halaman)`);
-				}
+			// -------------------------------------
+			// STEP 4: Query Booking by Specialization
+			// -------------------------------------
+			const bookingBySpecialization = await this._getBookingBySpecialization(targetDate);
 
-				const listJadwal = response.data?.list || [];
-				stats.total_fetched += listJadwal.length;
+			// -------------------------------------
+			// STEP 5: Query Practicing by Specialization
+			// -------------------------------------
+			const practicingBySpecialization = await this._getPracticingBySpecialization(targetDate);
 
-				// 2. Proses Upsert ke Database menggunakan Model Sequelize
-				for (const jadwal of listJadwal) {
-					await this.upsertJadwal(jadwal, stats);
-				}
-
-				page++;
-				await new Promise((resolve) => setTimeout(resolve, 200));
-			}
-
-			console.log(`[Sync] Selesai. Total Insert/Update: ${stats.updated}`);
-			return stats;
+			// -------------------------------------
+			// STEP 6: Format Final Output
+			// -------------------------------------
+			return {
+				date: targetDate,
+				generatedAt: moment().format(),
+				totals,
+				bookingByDoctor,
+				bookingBySpecialization,
+				practicingBySpecialization,
+			};
 		} catch (error) {
-			console.error("[Sync] Error fatal:", error);
+			console.error(`[DashboardService] Error generating stats:`, error.message);
 			throw error;
 		}
 	}
 
 	/**
-	 * Helper Private untuk melakukan UPSERT menggunakan Sequelize Model.
+	 * ========================================
+	 * PRIVATE: Get Totals (Dokter Counts)
+	 * ========================================
+	 *
+	 * Query untuk menghitung total dokter by status praktik.
+	 *
+	 * Output:
+	 * {
+	 *   doctorsTotal: 120,
+	 *   doctorsPracticing: 35,
+	 *   doctorsNotPracticing: 70,
+	 *   doctorsOnLeave: 15
+	 * }
 	 */
-	static async upsertJadwal(jadwal, stats) {
-		try {
-			// Mapping data API ke field Model
-			const dataToSave = {
-				id_dokter: jadwal.id_dokter,
-				tanggal: jadwal.tanggal_char, // YYYY-MM-DD
-				jam_mulai: jadwal.time_start, // Key unique gabungan
+	static async _getTotals(targetDate) {
+		const [result] = await DB.query(
+			`
+			SELECT 
+				COUNT(DISTINCT id_dokter) as doctors_total,
+				COUNT(DISTINCT CASE 
+					WHEN LOWER(status_praktik) NOT LIKE '%tidak praktik%' 
+						AND LOWER(status_praktik) NOT LIKE '%cuti%'
+						AND LOWER(status_praktik) NOT LIKE '%libur%'
+					THEN id_dokter 
+				END) as doctors_practicing,
+				COUNT(DISTINCT CASE 
+					WHEN 
+						LOWER(status_praktik) LIKE '%tidak praktik%' 
+						OR LOWER(status_praktik) LIKE '%cuti%' 
+						OR LOWER(status_praktik) LIKE '%libur%'
+					THEN id_dokter 
+				END) as doctors_on_leave
+			FROM dashboard_123
+			WHERE tanggal = :targetDate
+		`,
+			{
+				replacements: { targetDate },
+				type: DB.QueryTypes.SELECT,
+			},
+		);
 
-				nama_dokter: jadwal.nama_dokter,
-				kode_spesialis: jadwal.kode_spesialis,
-				nama_spesialis: jadwal.nama_spesialis,
-				hari: jadwal.day_name,
-				jam_selesai: jadwal.time_finish,
-				status_praktik: jadwal.status_praktik,
+		const total = parseInt(result?.doctors_total) || 0;
+		const practicing = parseInt(result?.doctors_practicing) || 0;
+		const onLeave = parseInt(result?.doctors_on_leave) || 0;
 
-				// Timestamp update manual karena kita pakai upsert
-				updated_at: new Date(),
-				last_synced_at: new Date(),
-			};
-
-			// Sequelize Upsert
-			const [, created] = await ModelDashboard123.upsert(dataToSave);
-
-			if (created) {
-				stats.inserted++;
-			} else {
-				stats.updated++;
-			}
-		} catch (error) {
-			console.error(`[Sync] Gagal simpan record dokter ${jadwal.nama_dokter}:`, error.message);
-		}
+		return {
+			doctorsTotal: total,
+			doctorsPracticing: practicing,
+			doctorsNotPracticing: total - practicing,
+			doctorsOnLeave: onLeave,
+		};
 	}
 
 	/**
-	 * Mengambil Data Dashboard dalam Format JSON Spesifik.
+	 * ========================================
+	 * PRIVATE: Get Booking by Doctor
+	 * ========================================
+	 *
+	 * Query untuk menghitung jumlah booking per dokter.
+	 * Menggunakan LEFT JOIN antara dashboard_123 dan dashboard_239.
+	 *
+	 * Output:
+	 * [
+	 *   { doctorId: 101, doctorName: "dr. Andi", bookings: 8 },
+	 *   { doctorId: 102, doctorName: "dr. Budi", bookings: 3 }
+	 * ]
 	 */
-	static async getDashboardStats(tanggal) {
-		// User preferensi: Tanggal parameter atau besok (H+1) defaultnya
-		const targetDate = tanggal || moment().add(1, "days").format("YYYY-MM-DD");
-
-		// Ambil data menggunakan Model.findAll
-		const rows = await ModelDashboard123.findAll({
-			where: {
-				tanggal: targetDate,
+	static async _getBookingByDoctor(targetDate) {
+		const results = await DB.query(
+			`
+			SELECT 
+				d123.id_dokter as doctor_id,
+				d123.nama_dokter as doctor_name,
+				COUNT(d239.booking_id) as bookings
+			FROM dashboard_123 d123
+			LEFT JOIN dashboard_239 d239
+				ON d123.id_dokter = d239.id_dokter
+				AND d123.tanggal = DATE(d239.tanggal_antrian)
+				AND d123.jam_mulai <= d239.mulai
+				AND d123.jam_selesai > d239.mulai
+				AND d239.status_booking = 'Aktif'
+			WHERE d123.tanggal = :targetDate
+			GROUP BY d123.id_dokter, d123.nama_dokter
+			ORDER BY bookings DESC, doctor_name ASC
+		`,
+			{
+				replacements: { targetDate },
+				type: DB.QueryTypes.SELECT,
 			},
-			raw: true,
-		});
+		);
 
-		// Inisialisasi Sets dan Maps untuk Aggregasi Data
-		let doctorsTotal = new Set();
-		let doctorsPracticing = new Set();
-		let doctorsOnLeave = new Set();
+		return results.map((row) => ({
+			doctorId: String(row.doctor_id),
+			doctorName: row.doctor_name,
+			bookings: parseInt(row.bookings),
+		}));
+	}
 
-		let bookingByDocMap = {};
-		let bookingBySpecMap = {};
-		let practiceBySpecMap = {};
-
-		// Loop Data -> Aggregation Logic
-		rows.forEach((row) => {
-			// 1. Hitung Total Dokter (Unique)
-			doctorsTotal.add(row.id_dokter);
-
-			// 2. Cek Status Praktik
-			// Logic User: jika contains 'tidak praktik', masuk onLeave
-			if (row.status_praktik && row.status_praktik.toLowerCase().includes("tidak praktik")) {
-				doctorsOnLeave.add(row.id_dokter);
-			} else {
-				doctorsPracticing.add(row.id_dokter);
-
-				// Grouping Practicing by Spec
-				if (!practiceBySpecMap[row.nama_spesialis]) {
-					practiceBySpecMap[row.nama_spesialis] = {
-						specialization: row.nama_spesialis,
-						doctors: new Set(),
-						doctorList: [],
-					};
-				}
-
-				const specGroup = practiceBySpecMap[row.nama_spesialis];
-				if (!specGroup.doctors.has(row.id_dokter)) {
-					specGroup.doctors.add(row.id_dokter);
-					specGroup.doctorList.push({ id: row.id_dokter, name: row.nama_dokter });
-				}
-			}
-
-			// 3. Hitung Booking (Default 0)
-			const bookingCount = 0;
-
-			// Per Dokter
-			if (!bookingByDocMap[row.id_dokter]) {
-				bookingByDocMap[row.id_dokter] = {
-					doctorId: row.id_dokter,
-					doctorName: row.nama_dokter,
-					bookings: 0,
-				};
-			}
-			bookingByDocMap[row.id_dokter].bookings += bookingCount;
-
-			// Per Spesialis
-			if (!bookingBySpecMap[row.nama_spesialis]) {
-				bookingBySpecMap[row.nama_spesialis] = {
-					specialization: row.nama_spesialis,
-					bookings: 0,
-				};
-			}
-			bookingBySpecMap[row.nama_spesialis].bookings += bookingCount;
-		});
-
-		// Formatting Hasil Akhir ke JSON
-		return {
-			date: targetDate,
-			generatedAt: moment().format(),
-			totals: {
-				doctorsTotal: doctorsTotal.size,
-				doctorsPracticing: doctorsPracticing.size,
-				doctorsNotPracticing: doctorsTotal.size - doctorsPracticing.size,
-				doctorsOnLeave: doctorsOnLeave.size,
+	/**
+	 * ========================================
+	 * PRIVATE: Get Booking by Specialization
+	 * ========================================
+	 *
+	 * Query untuk menghitung jumlah booking per spesialisasi.
+	 * Menggunakan LEFT JOIN dan GROUP BY spesialisasi.
+	 *
+	 * Output:
+	 * [
+	 *   { specialization: "Sp. Anak", bookings: 12 },
+	 *   { specialization: "Sp. Penyakit Dalam", bookings: 9 }
+	 * ]
+	 */
+	static async _getBookingBySpecialization(targetDate) {
+		const results = await DB.query(
+			`
+			SELECT 
+				d123.nama_spesialis as specialization,
+				COUNT(d239.booking_id) as bookings
+			FROM dashboard_123 d123
+			LEFT JOIN dashboard_239 d239
+				ON d123.id_dokter = d239.id_dokter
+				AND d123.tanggal = DATE(d239.tanggal_antrian)
+				AND d123.jam_mulai <= d239.mulai
+				AND d123.jam_selesai > d239.mulai
+				AND d239.status_booking = 'Aktif'
+			WHERE d123.tanggal = :targetDate
+			GROUP BY d123.nama_spesialis
+			ORDER BY bookings DESC, specialization ASC
+		`,
+			{
+				replacements: { targetDate },
+				type: DB.QueryTypes.SELECT,
 			},
-			bookingByDoctor: Object.values(bookingByDocMap),
-			bookingBySpecialization: Object.values(bookingBySpecMap),
-			practicingBySpecialization: Object.values(practiceBySpecMap).map((item) => ({
-				specialization: item.specialization,
-				doctors: item.doctors.size,
-				doctorList: item.doctorList,
-			})),
-		};
+		);
+
+		return results.map((row) => ({
+			specialization: row.specialization,
+			bookings: parseInt(row.bookings),
+		}));
+	}
+
+	/**
+	 * ========================================
+	 * PRIVATE: Get Practicing by Specialization
+	 * ========================================
+	 *
+	 * Query untuk menghitung dokter praktik per spesialisasi
+	 * dengan list dokter dalam format JSON.
+	 *
+	 * Menggunakan PostgreSQL json_agg untuk aggregasi list.
+	 *
+	 * Output:
+	 * [
+	 *   {
+	 *     specialization: "Sp. Anak",
+	 *     doctors: 2,
+	 *     doctorList: [
+	 *       { id: "101", name: "dr. Andi" },
+	 *       { id: "103", name: "dr. Citra" }
+	 *     ]
+	 *   }
+	 * ]
+	 */
+	static async _getPracticingBySpecialization(targetDate) {
+		const results = await DB.query(
+			`
+			SELECT 
+				nama_spesialis as specialization,
+				COUNT(DISTINCT id_dokter) as doctors,
+				json_agg(
+					jsonb_build_object(
+						'id', id_dokter::text,
+						'name', nama_dokter
+					)
+					ORDER BY nama_dokter
+				) as doctor_list
+			FROM dashboard_123
+			WHERE tanggal = :targetDate
+			GROUP BY nama_spesialis
+			ORDER BY nama_spesialis ASC
+		`,
+			{
+				replacements: { targetDate },
+				type: DB.QueryTypes.SELECT,
+			},
+		);
+
+		return results.map((row) => ({
+			specialization: row.specialization,
+			doctors: parseInt(row.doctors),
+			doctorList: row.doctor_list || [],
+		}));
 	}
 }
 
