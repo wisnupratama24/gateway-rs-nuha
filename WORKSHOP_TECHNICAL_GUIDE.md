@@ -53,9 +53,9 @@ Sistem **Dashboard Monitoring** yang menampilkan:
 ### 📦 Prasyarat
 
 Pastikan sudah terinstall:
-- **Docker Desktop** - [Download](https://www.docker.com/products/docker-desktop/)
+- **Docker Desktop** - [Download](https://www.docker.com/products/docker-desktop/) (Opsional, jika tidak memiliki remote server)
 - **Node.js** (v20+) - [Download](https://nodejs.org/)
-- **Git** - [Download](https://git-scm.com/)
+- **Git** - [Download](https://git-scm.com/) (Opsional)
 
 ### Step 1: Clone Repository
 
