@@ -1,14 +1,18 @@
 const moment = require("moment");
-const ExternalService = require("../../../helpers/external_service/externalServiceHelper");
-const { EXTERNAL_API_URL, EXTERNAL_API_BASE_URL, EXTERNAL_API_TOKEN, EXTERNAL_API_KEY } = require("../../../helpers/env/envConfig");
+const ExternalService = require("../../../helpers/external_service/ExternalServiceHelper");
+const { CLIENT_1 } = require("../../../config/redis");
+const { EXTERNAL_API_URL, EXTERNAL_API_BASE_URL, EXTERNAL_API_TOKEN, EXTERNAL_API_KEY, EXTERNAL_REFRESH_TOKEN } = require("../../../helpers/env/envConfig");
 class DokterService {
 	static async getJadwalDokterService(params) {
 		try {
 			const url = `${EXTERNAL_API_URL}${EXTERNAL_API_BASE_URL}`;
+
+			let getToken = await this.getToken();
+
 			// Konfigurasi Header (Token & API Key)
 			const headers = {
 				"Content-Type": "application/json",
-				token: EXTERNAL_API_TOKEN,
+				token: getToken.data_token.token,
 				"x-api-key": EXTERNAL_API_KEY,
 			};
 
@@ -35,6 +39,40 @@ class DokterService {
 			console.error("Error fetching external data:", error.message);
 			// Lempar error agar bisa dihandle service
 			throw new Error("Gagal mengambil data dari API Eksternal. Cek koneksi atau token.");
+		}
+	}
+
+	static async getToken() {
+		const url = `${EXTERNAL_API_URL}/v3/view/view-table/refresh-token-access`;
+
+		let data_token = {
+			token: "",
+			refresh_token: "",
+		};
+
+		let cache_baru = await CLIENT_1.get(`open_api_token`);
+
+		if (cache_baru) {
+			data_token.token = JSON.parse(cache_baru).token;
+			data_token.refresh_token = JSON.parse(cache_baru).refresh_token;
+
+			return { data_token };
+		} else {
+			const headers = {
+				"Content-Type": "application/json",
+				token: EXTERNAL_API_TOKEN,
+				refresh_token: EXTERNAL_REFRESH_TOKEN,
+				"x-api-key": EXTERNAL_API_KEY,
+			};
+
+			const response = await ExternalService.post({ url: url, headers: headers });
+
+			data_token.token = response.data.token;
+			data_token.refresh_token = response.data.refresh_token;
+
+			await CLIENT_1.set(`open_api_token`, JSON.stringify({ token: data_token.token, refresh_token: data_token.refresh_token }, null, 2), { EX: 43200 }); // 12 jam
+
+			return { data_token };
 		}
 	}
 }
