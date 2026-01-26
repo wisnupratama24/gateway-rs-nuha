@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { EXTERNAL_API_URL, EXTERNAL_API_TOKEN, EXTERNAL_API_KEY } = require("../../../helpers/env/env.config");
+const { EXTERNAL_API_URL, EXTERNAL_API_TOKEN, EXTERNAL_API_KEY } = require("../../../helpers/env/envConfig");
 
 /**
  * ========================================
@@ -91,9 +91,7 @@ class DashboardUtil {
 			// Return full response (data + meta_data)
 			return response.data;
 		} catch (error) {
-			// -------------------------------------
-			// ERROR HANDLING
-			// -------------------------------------
+			console.log(error);
 			console.error("[DashboardUtil] Error fetching external data:", error.message);
 
 			// Re-throw dengan pesan yang jelas untuk debugging

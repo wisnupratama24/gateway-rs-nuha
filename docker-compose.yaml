@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+    # Database PostgreSQL untuk menyimpan data hasil sinkronisasi
+    postgres:
+        image: postgres:14-alpine
+        container_name: gateway_nuha_postgres
+        restart: always
+        environment:
+            POSTGRES_USER: ${DB_USERNAME:-postgres}
+            POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+            POSTGRES_DB: ${DB_DATABASE:-gateway_nuha_db}
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+
+    # Redis untuk manajemen session dan caching (jika diperlukan)
+    redis:
+        image: redis:alpine
+        container_name: gateway_nuha_redis
+        restart: always
+        ports:
+            - "6379:6379"
+        command: redis-server --save 60 1 --loglevel warning
+
+volumes:
+    postgres_data:

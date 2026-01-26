@@ -319,7 +319,7 @@ router.get(
     query("limit")
       .notEmpty()
       .isInt({ min: 1, max: 100 })
-      .withMessage("Limit harus berupa angka antara 1-100")
+      .withMessage("Limit harus berupa angka antara 1-1000")
       .toInt(),
     query("pages")
       .notEmpty()

@@ -1,5 +1,5 @@
 let jwt = require("jsonwebtoken");
-const { KEY_JWT } = require("../env/env.config");
+const { KEY_JWT } = require("../env/envConfig");
 const { ErrorInFunction } = require("../error");
 
 class Jwt {

@@ -1,6 +1,6 @@
 const moment = require("moment");
-const ExternalService = require("../../../helpers/external_service/ExternalServiceHelper");
-const { EXTERNAL_API_URL, EXTERNAL_API_BASE_URL, EXTERNAL_API_TOKEN, EXTERNAL_API_KEY } = require("../../../helpers/env/env.config");
+const ExternalService = require("../../../helpers/external_service/externalServiceHelper");
+const { EXTERNAL_API_URL, EXTERNAL_API_BASE_URL, EXTERNAL_API_TOKEN, EXTERNAL_API_KEY } = require("../../../helpers/env/envConfig");
 class DokterService {
 	static async getJadwalDokterService(params) {
 		try {

@@ -1,11 +1,11 @@
 // Import middleware and routers
 const SanitizeInput = require("./sanitize/sanitizeInputMiddleware");
 const errorHandler = require("./error/errorHelper");
-const successHandler = require("./success/succesResponse");
+const successHandler = require("./success/successResponse");
 const notfound_response = require("./error/notFoundResponse");
 const routers = require("../modules/router/index");
 const authHandler = require("./auth/index");
-const { RATE_LIMIT_ENABLED } = require("../helpers/env/env.config");
+const { RATE_LIMIT_ENABLED } = require("../helpers/env/envConfig");
 const { general: rateLimiterGeneral } = require("./security/rateLimiter");
 
 class Middlewares {

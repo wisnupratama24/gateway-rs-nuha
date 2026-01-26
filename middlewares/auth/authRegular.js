@@ -1,7 +1,7 @@
 // let jwt = require("../../helpers/jwt/jwt");
 // const { UnauthorizedError } = require("../../helpers/error");
 
-async function authRegulerHandler(req, res, next) {
+async function authRegularHandler(req, res, next) {
 	try {
 		return next();
 		// if (res.headersSent) {
@@ -22,5 +22,5 @@ async function authRegulerHandler(req, res, next) {
 }
 
 module.exports = {
-	authRegulerHandler,
+	authRegularHandler,
 };

@@ -1,7 +1,7 @@
 const Minio = require("minio");
 const fs = require("fs");
 const path = require("path");
-const { MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRETKEY, MINIO_BUCKET, MINIO_PORT } = require("../env/env.config");
+const { MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRETKEY, MINIO_BUCKET, MINIO_PORT } = require("../env/envConfig");
 
 class MinioHelperClient {
 	constructor() {

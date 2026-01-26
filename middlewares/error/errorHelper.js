@@ -1,6 +1,6 @@
 const { errorServer, error404, error204, error403, error400, error401 } = require("../../helpers/response/responseHelper");
 const { DataDuplicateError, ValidationError, ForbiddenError, UnauthorizedError, RequiredError, DataNotFoundError, ErrorInFunction, axiosErrorHelper } = require("../../helpers/error");
-const { APP_AREA, APP_ENV } = require("../../helpers/env/env.config");
+const { APP_AREA, APP_ENV } = require("../../helpers/env/envConfig");
 async function ErrorHandler(error, req, res, next) {
 	if (error && !res.headerSent) {
 		console.log(error);

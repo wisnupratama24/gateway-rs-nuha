@@ -1,5 +1,5 @@
 const { createClient } = require("redis");
-const { REDIS_HOST } = require("../../helpers/env/env.config");
+const { REDIS_HOST } = require("../../helpers/env/envConfig");
 
 // Connect to Redis
 const CLIENT_1 = createClient({
