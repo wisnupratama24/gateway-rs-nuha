@@ -83,7 +83,7 @@ class BaseSyncService {
 		// STEP 2: Setup Date Range
 		// ========================================
 		// Format: YYYY-MM-DDTHH:mm:ss+00:00 (ISO 8601 dengan timezone)
-		const startDate = moment().format("YYYY-MM-DD") + "T00:00:00+00:00";
+		const startDate = moment().subtract(1, "days").format("YYYY-MM-DD") + "T00:00:00+00:00";
 		const endDate = moment().add(config.defaultDaysRange, "days").format("YYYY-MM-DD") + "T23:59:59+00:00";
 
 		console.log(`[BaseSyncService] Sync range: ${startDate} s/d ${endDate} (${config.defaultDaysRange} hari)`);
