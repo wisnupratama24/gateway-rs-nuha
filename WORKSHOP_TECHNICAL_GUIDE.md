@@ -65,25 +65,22 @@ cd gateway-rs-nuha
 ```
 
 ### Step 2: Jalankan Docker Compose
+Opsional: Pilih mode yang sesuai kebutuhan.
 
-Docker Compose akan menjalankan **PostgreSQL** dan **Redis** secara otomatis.
-
+**Mode A: Full Stack (App + Database + Redis)**
+Jalankan seluruh sistem menggunakan Docker. Cocok untuk demo/deployment.
 ```bash
-# Jalankan containers (background mode)
 docker-compose up -d
+```
+*Aplikasi akan berjalan di http://localhost:3033*
 
-# Cek status containers
-docker-compose ps
+**Mode B: Hybrid / Local Dev (Database + Redis saja)**
+Jalankan hanya database dan redis di Docker, sedangkan aplikasi dijalankan manual (npm run dev). Cocok untuk live coding.
+```bash
+docker-compose up -d db redis
 ```
 
-**Contoh Output:**
-```
-NAME                      STATUS    PORTS
-gateway_nuha_postgres     running   0.0.0.0:5432->5432/tcp
-gateway_nuha_redis        running   0.0.0.0:6379->6379/tcp
-```
-
-> 💡 **Tip:** Jika error "port already in use", pastikan tidak ada PostgreSQL/Redis dan atau aplikasi lain yang running dengan menggunakan port yang sama.
+> 💡 **Tip:** Jika error "port already in use", pastikan port 3033/5432/6379 tidak sedang digunakan oleh service lain.
 
 ### Step 3: Setup Environment Variables
 
@@ -131,7 +128,8 @@ psql -U postgres -d simrs_nuha -f migration_dashboard_multi_sync.sql
 docker exec -i gateway_nuha_postgres psql -U postgres -d simrs_nuha < migration_dashboard_multi_sync.sql
 ```
 
-### Step 6: Jalankan Aplikasi
+### Step 6: Jalankan Aplikasi (Khusus Mode B)
+*Jika menggunakan Mode A (Full Stack Docker), lewati langkah ini.*
 
 ```bash
 npm run dev

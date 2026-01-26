@@ -1,3 +1,5 @@
 node_modules
 .env
 *asset
+postgres_data
+redis_data

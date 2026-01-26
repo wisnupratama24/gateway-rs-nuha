@@ -1,49 +1,25 @@
-FROM node:20-bookworm-slim
+# Gunakan Node.js versi LTS (Long Term Support) yang ringan
+FROM node:20-alpine
 
+# Set timezone agar sesuai dengan server lokal (Asia/Jakarta)
+RUN apk add --no-cache tzdata
+ENV TZ=Asia/Jakarta
+
+# Set direktori kerja di dalam container
 WORKDIR /app
 
-# Install necessary dependencies for Node.js backend
-# Includes dependencies for exceljs (cairo, pango) and native modules (bcrypt)
-RUN apt-get update && apt-get install -yq \
-  ca-certificates \
-  fonts-liberation \
-  libappindicator1 \
-  libnss3 \
-  lsb-release \
-  xdg-utils \
-  wget \
-  xvfb \
-  curl \
-  gnupg \
-  unzip \
-  sudo \
-  build-essential \
-  python3 \
-  libcairo2-dev \
-  libpango1.0-dev \
-  libjpeg-dev \
-  libgif-dev \
-  librsvg2-dev \
-  --no-install-recommends \
-  && rm -rf /var/lib/apt/lists/*
-
-# Copy package files first for better layer caching
+# Salin package.json dan package-lock.json terlebih dahulu (untuk caching layer)
 COPY package*.json ./
 
-# Install npm dependencies
-RUN npm ci --only=production && npm cache clean --force
+# Install dependencies
+# Menggunakan npm install (bukan ci) agar lebih fleksibel di env development
+RUN npm install
 
-# Copy the rest of the application files
+# Salin seluruh kode source ke dalam container
 COPY . .
 
-# Create non-root user for security
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-  && chown -R appuser:appuser /app
-
-USER appuser
-
-# Expose the port the app runs on
+# Expose port aplikasi (sesuai .env PORT_EXPRESS)
 EXPOSE 3033
 
-# Command to start the application
-CMD ["node", "app.js"]
+# Command default untuk menjalankan aplikasi
+CMD ["npm", "run", "start"]
