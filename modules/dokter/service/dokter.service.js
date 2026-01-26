@@ -1,11 +1,11 @@
 const moment = require("moment");
 const ExternalService = require("../../../helpers/external_service/ExternalServiceHelper");
 const { CLIENT_1 } = require("../../../config/redis");
-const { EXTERNAL_API_URL, EXTERNAL_API_BASE_URL, EXTERNAL_API_TOKEN, EXTERNAL_API_KEY, EXTERNAL_REFRESH_TOKEN } = require("../../../helpers/env/envConfig");
+const { EXTERNAL_API_URL, EXTERNAL_API_TOKEN, EXTERNAL_API_KEY, EXTERNAL_API_REFRESH_TOKEN } = require("../../../helpers/env/envConfig");
 class DokterService {
 	static async getJadwalDokterService(params) {
 		try {
-			const url = `${EXTERNAL_API_URL}${EXTERNAL_API_BASE_URL}`;
+			const url = `${EXTERNAL_API_URL}/v3/view/view-table/list-filter-access`;
 
 			let getToken = await this.getToken();
 
@@ -61,7 +61,7 @@ class DokterService {
 			const headers = {
 				"Content-Type": "application/json",
 				token: EXTERNAL_API_TOKEN,
-				refresh_token: EXTERNAL_REFRESH_TOKEN,
+				refresh_token: EXTERNAL_API_REFRESH_TOKEN,
 				"x-api-key": EXTERNAL_API_KEY,
 			};
 
