@@ -23,6 +23,7 @@ services:
       - EXTERNAL_API_URL=${EXTERNAL_API_URL}
       - EXTERNAL_API_TOKEN=${EXTERNAL_API_TOKEN}
       - EXTERNAL_API_KEY=${EXTERNAL_API_KEY}
+      - EXTERNAL_API_REFRESH_TOKEN=${EXTERNAL_API_REFRESH_TOKEN}
     depends_on:
       - db
       - redis
