@@ -71,7 +71,7 @@ module.exports = {
 		description: "Sinkronisasi jadwal praktik dokter",
 
 		// Default range tanggal (hari)
-		defaultDaysRange: 14, // Sync 14 hari ke depan
+		defaultDaysRange: 7, // Sync 7 hari ke depan
 	},
 
 	/**
