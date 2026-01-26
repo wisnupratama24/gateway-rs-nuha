@@ -25,15 +25,15 @@ Sistem **Dashboard Monitoring** yang menampilkan:
 ### 🏗️ Arsitektur Sistem
 
 ```
-┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
-│   NUHA SIMRS    │      │   Gateway RS    │      │    Dashboard    │
+┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
+│   NUHA SIMRS    │       │   Gateway RS    │       │    Dashboard    │
 │   (API Source)  │◀────▶│   NUHA (Node)   │─────▶│   Frontend      │
-└─────────────────┘      └────────┬────────┘      └─────────────────┘
-                                  │
-                         ┌────────▼────────┐
-                         │   PostgreSQL    │
-                         │   (Database)    │
-                         └─────────────────┘
+└─────────────────┘       └────────┬────────┘       └─────────────────┘
+                                   │
+                          ┌────────▼────────┐
+                          │   PostgreSQL    │
+                          │   (Database)    │
+                          └─────────────────┘
 ```
 
 **Penjelasan Arsitektur:**
@@ -53,8 +53,8 @@ Sistem **Dashboard Monitoring** yang menampilkan:
 ### 📦 Prasyarat
 
 Pastikan sudah terinstall:
-- **Docker Desktop** - [Download](https://www.docker.com/products/docker-desktop/) (Opsional, jika tidak memiliki remote server)
 - **Node.js** (v20+) - [Download](https://nodejs.org/)
+- **Docker Desktop** - [Download](https://www.docker.com/products/docker-desktop/) (Opsional, jika tidak memiliki remote server)
 - **Git** - [Download](https://git-scm.com/) (Opsional)
 
 ### Step 1: Clone Repository
@@ -76,7 +76,7 @@ docker-compose up -d
 docker-compose ps
 ```
 
-**Expected Output:**
+**Contoh Output:**
 ```
 NAME                      STATUS    PORTS
 gateway_nuha_postgres     running   0.0.0.0:5432->5432/tcp
