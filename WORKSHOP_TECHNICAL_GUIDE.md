@@ -20,9 +20,7 @@
 ## 1. Gambaran Umum Sistem (Sesi 2)
 
 ### 🔗 Konteks Workshop
-Halo! Sesi ini adalah lanjutan dari **Sesi 1: Konsumsi API Langsung**.
-Jika di Sesi 1 kita belajar cara mengambil data langsung dari Endpoint NUHA, di **Sesi 2** ini kita akan menjawab satu pertanyaan besar:
-> *"Bagaimana jika trafik tinggi dan kita butuh Dashboard yang super cepat tanpa membebani server utama?"*
+> *"Mempelajari cara lain dalam memanfaatkan Open API NUHA. Jika di Sesi 1 kita langsung mengkonsumsi data secara real-time, kali ini kita akan menyimpan data terlebih dahulu agar bisa diolah sesuai kebutuhan."*
 
 ### ⚔️ Perbandingan Strategi: Direct vs Gateway
 
@@ -31,14 +29,14 @@ Jika di Sesi 1 kita belajar cara mengambil data langsung dari Endpoint NUHA, di 
 | **Sumber Data** | Hit langsung ke API SIMRS | Query ke Database Lokal (Postgres) |
 | **Latency** | Tergantung Server RS (500ms - 2s) | Instant (<50ms) |
 | **Beban Server** | Tinggi (setiap refresh = hit API) | Ringan (Hit API hanya saat Sync) |
-| **Kegunaan** | Cek Status Pasien Real-time, Validasi | Dashboard Eksekutif, Statistik, Grafik Tren |
+| **Kegunaan** | Cek Status Pasien Real-time, Validasi | Dashboard, Laporan, dsb. |
 
 ### 🎯 Apa yang Kita Bangun?
 
 Kita akan membangun **"Bendungan Data"** (Gateway) yang berfungsi:
 1.  **Sync Worker:** Menyedot data dari NUHA SIMRS secara berkala (misal: tiap minggu).
 2.  **Data Warehouse:** Menyimpan data tersebut ke PostgreSQL lokal.
-3.  **High Speed API:** Menyajikan data statistik ke Dashboard dari gudang data kita sendiri.
+3.  **API:** Menyajikan data statistik ke Dashboard dari gudang data kita sendiri.
 
 ### 🏗️ Arsitektur Sistem
 
@@ -217,6 +215,7 @@ Sinkronisasi adalah proses **mengambil data dari NUHA SIMRS** (API) dan **menyim
         ▼
 8️⃣ RESPONSE                  { success: true, stats: { inserted, updated } }
 ```
+Bisa dilihat di folder diagrams
 
 ### 🧩 Komponen Sync
 
