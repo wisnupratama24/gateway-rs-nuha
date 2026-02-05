@@ -16,9 +16,9 @@ services:
       - DB_USER=postgres
       - DB_PASS=postgres
       - DB_NAME=gateway_nuha_db
-      - DB_PORT=5432
+      - DB_PORT=6000
       # Override host redis ke nama service 'redis'
-      - REDIS_HOST=redis://redis:6379
+      - REDIS_HOST=redis://redis:6001
       # API Config (tetap sama atau sesuaikan jika perlu)
       - EXTERNAL_API_URL=${EXTERNAL_API_URL}
       - EXTERNAL_API_TOKEN=${EXTERNAL_API_TOKEN}
@@ -41,7 +41,7 @@ services:
       - POSTGRES_DB=gateway_nuha_db
       - TZ=Asia/Jakarta
     ports:
-      - "5432:5432"
+      - "6000:6000"
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
     networks:
@@ -53,7 +53,7 @@ services:
     container_name: gateway-nuha-redis
     restart: always
     ports:
-      - "6379:6379"
+      - "6001:6001"
     volumes:
       - ./redis_data:/data
     command: redis-server --appendonly yes

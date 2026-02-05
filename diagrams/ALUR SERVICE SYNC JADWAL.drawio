@@ -1,0 +1,163 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0" version="29.3.7">
+  <diagram name="Sync Jadwal Flow" id="ZU1FuqB0sT_Nk9GUpzFl">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-1" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#0D7377;" value="ALUR SYNC-JADWAL (Start → End)" vertex="1">
+          <mxGeometry height="40" width="500" x="450" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;" value="1️⃣ CLIENT&#xa;POST /dashboard/sync-jadwal" vertex="1">
+          <mxGeometry height="60" width="200" x="600" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-3" edge="1" parent="1" source="Enx7DNwnkXMuy9aNc5tc-2" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#0D7377;" target="Enx7DNwnkXMuy9aNc5tc-4" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" value="2️⃣ ROUTER&#xa;modules/dashboard/router/index.js&#xa;router.post(&quot;/sync-jadwal&quot;, ...)" vertex="1">
+          <mxGeometry height="60" width="300" x="550" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-5" edge="1" parent="1" source="Enx7DNwnkXMuy9aNc5tc-4" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#0D7377;" target="Enx7DNwnkXMuy9aNc5tc-6" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" value="3️⃣ CONTROLLER&#xa;dashboard.controller.js&#xa;triggerSyncJadwal()&#xa;→ jadwalSyncService.syncJadwalDokter()" vertex="1">
+          <mxGeometry height="70" width="300" x="550" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-7" edge="1" parent="1" source="Enx7DNwnkXMuy9aNc5tc-6" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#0D7377;" target="Enx7DNwnkXMuy9aNc5tc-8" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=10;" value="4️⃣ JADWAL SYNC SERVICE&#xa;jadwal-sync.service.js&#xa;• Load SYNC_CONFIG.JADWAL_DOKTER&#xa;• Load Model Dashboard123&#xa;• Panggil: this.syncData(config, Model, mapFunc)" vertex="1">
+          <mxGeometry height="90" width="360" x="520" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-9" edge="1" parent="1" source="Enx7DNwnkXMuy9aNc5tc-8" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#0D7377;" target="Enx7DNwnkXMuy9aNc5tc-10" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" value="" vertex="1">
+          <mxGeometry height="350" width="800" x="300" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-11" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#6C3483;" value="5️⃣ BASE SYNC SERVICE - base-sync.service.js - syncData()" vertex="1">
+          <mxGeometry height="25" width="600" x="400" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-12" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" value="STEP 1&#xa;Setup Date Range&#xa;startDate = T-1&#xa;endDate = T+7" vertex="1">
+          <mxGeometry height="70" width="120" x="320" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-13" edge="1" parent="1" source="Enx7DNwnkXMuy9aNc5tc-12" style="endArrow=classic;html=1;strokeWidth=1;strokeColor=#333;" target="Enx7DNwnkXMuy9aNc5tc-14" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" value="STEP 2&#xa;Init Pagination&#xa;page=1&#xa;totalPages=1&#xa;limit=10" vertex="1">
+          <mxGeometry height="80" width="100" x="470" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-15" edge="1" parent="1" source="Enx7DNwnkXMuy9aNc5tc-14" style="endArrow=classic;html=1;strokeWidth=1;strokeColor=#333;" target="Enx7DNwnkXMuy9aNc5tc-18" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-16" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;dashed=1;dashPattern=5 5;" value="" vertex="1">
+          <mxGeometry height="200" width="480" x="600" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-17" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=1;fontColor=#D35400;" value="STEP 3: PAGINATION LOOP (while page &lt;= totalPages)" vertex="1">
+          <mxGeometry height="20" width="400" x="640" y="565" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-18" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=10;" value="Fetch API&#xa;(DashboardUtil)" vertex="1">
+          <mxGeometry height="50" width="100" x="620" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-19" edge="1" parent="1" source="Enx7DNwnkXMuy9aNc5tc-18" style="endArrow=classic;html=1;strokeWidth=1;strokeColor=#333;" target="Enx7DNwnkXMuy9aNc5tc-20" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-20" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=9;" value="page==1?&#xa;Hitung totalPages" vertex="1">
+          <mxGeometry height="70" width="100" x="740" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-21" edge="1" parent="1" source="Enx7DNwnkXMuy9aNc5tc-20" style="endArrow=classic;html=1;strokeWidth=1;strokeColor=#333;" target="Enx7DNwnkXMuy9aNc5tc-22" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" value="Loop Records&#xa;↓&#xa;upsertRecord()" vertex="1">
+          <mxGeometry height="60" width="100" x="860" y="595" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-23" edge="1" parent="1" source="Enx7DNwnkXMuy9aNc5tc-22" style="endArrow=classic;html=1;strokeWidth=1;strokeColor=#333;" target="Enx7DNwnkXMuy9aNc5tc-24" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-24" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" value="page++&#xa;delay 200ms" vertex="1">
+          <mxGeometry height="50" width="80" x="980" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-25" edge="1" parent="1" source="Enx7DNwnkXMuy9aNc5tc-24" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#D35400;curved=1;entryX=0.5;entryY=1;exitX=0.5;exitY=1;" target="Enx7DNwnkXMuy9aNc5tc-18" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1020" y="720" />
+              <mxPoint x="670" y="720" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-26" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=10;fontColor=#D35400;" value="if page &lt;= totalPages" vertex="1">
+          <mxGeometry height="20" width="120" x="780" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-27" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" value="STEP 4&#xa;Return Stats&#xa;{inserted, updated, total}" vertex="1">
+          <mxGeometry height="50" width="160" x="620" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-28" edge="1" parent="1" source="Enx7DNwnkXMuy9aNc5tc-16" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#0D7377;exitX=0;exitY=0.5;entryX=0.5;entryY=0;" target="Enx7DNwnkXMuy9aNc5tc-27" value="Loop selesai">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="280" y="660" />
+              <mxPoint x="280" y="760" />
+              <mxPoint x="700" y="760" />
+            </Array>
+            <mxPoint x="590" y="680" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-29" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;" value="" vertex="1">
+          <mxGeometry height="200" width="220" x="70" y="870" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-30" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#1F618D;" value="6️⃣ DASHBOARD UTIL&#xa;dashboard.util.js" vertex="1">
+          <mxGeometry height="35" width="200" x="80" y="875" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-31" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=10;fontFamily=Courier New;" value="getToken()&#xa;├── Cek Redis Cache&#xa;│   └── HIT? → Return&#xa;│   └── MISS? → Refresh&#xa;└── Cache ke Redis (12 jam)" vertex="1">
+          <mxGeometry height="80" width="200" x="80" y="915" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-32" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=10;fontFamily=Courier New;" value="fetchDataFromExternal()&#xa;├── Build Headers (token)&#xa;├── Build Body (filters)&#xa;└── axios.post() → Return" vertex="1">
+          <mxGeometry height="65" width="200" x="80" y="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-33" edge="1" parent="1" source="Enx7DNwnkXMuy9aNc5tc-18" style="endArrow=classic;startArrow=classic;html=1;strokeWidth=2;strokeColor=#2980B9;dashed=1;exitX=0;exitY=0.5;entryX=1;entryY=0.3;" target="Enx7DNwnkXMuy9aNc5tc-29" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-34" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;align=left;spacingLeft=10;fontFamily=Courier New;" value="8️⃣ RESPONSE&#xa;&#xa;{&#xa;  &quot;success&quot;: true,&#xa;  &quot;message&quot;: &quot;Sync selesai&quot;,&#xa;  &quot;stats&quot;: {&#xa;    &quot;inserted&quot;: 0,&#xa;    &quot;updated&quot;: 434,&#xa;    &quot;total_fetched&quot;: 434&#xa;  }&#xa;}" vertex="1">
+          <mxGeometry height="170" width="200" x="600" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-35" edge="1" parent="1" source="Enx7DNwnkXMuy9aNc5tc-27" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#0D7377;" target="Enx7DNwnkXMuy9aNc5tc-34" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-36" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="" vertex="1">
+          <mxGeometry height="140" width="200" x="1120" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-37" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#1D8348;" value="7️⃣ UPSERT RECORD" vertex="1">
+          <mxGeometry height="25" width="180" x="1130" y="415" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-38" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=10;fontFamily=Courier New;" value="• Map API data → Model&#xa;• Model.upsert(data)&#xa;  └── created=true → INSERT&#xa;  └── created=false → UPDATE&#xa;• Update stats counter" vertex="1">
+          <mxGeometry height="100" width="180" x="1130" y="445" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-39" edge="1" parent="1" source="Enx7DNwnkXMuy9aNc5tc-22" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#27AE60;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.3;" target="Enx7DNwnkXMuy9aNc5tc-36" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-40" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" value="" vertex="1">
+          <mxGeometry height="130" width="200" x="1120" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-41" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;" value="LEGEND" vertex="1">
+          <mxGeometry height="20" width="100" x="1160" y="85" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-42" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=9;" value="Pagination" vertex="1">
+          <mxGeometry height="20" width="70" x="1147" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-43" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=9;" value="Token/API" vertex="1">
+          <mxGeometry height="20" width="70" x="1227" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-44" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=9;" value="Upsert" vertex="1">
+          <mxGeometry height="20" width="70" x="1147" y="135" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-45" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" value="Config" vertex="1">
+          <mxGeometry height="20" width="70" x="1227" y="135" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-46" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=9;" value="Service/Utility" vertex="1">
+          <mxGeometry height="20" width="150" x="1147" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="Enx7DNwnkXMuy9aNc5tc-47" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=9;" value="Controller/Router" vertex="1">
+          <mxGeometry height="20" width="150" x="1147" y="185" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

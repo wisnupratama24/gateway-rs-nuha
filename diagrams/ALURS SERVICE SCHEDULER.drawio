@@ -1,0 +1,177 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0" version="29.3.7">
+  <diagram name="Scheduler Flow" id="SmY9cIberHXPJ8DlVZCF">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-1" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#0D7377;" value="ALUR SCHEDULER (CRON JOB) - Auto Sync" vertex="1">
+          <mxGeometry height="40" width="500" x="400" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;" value="🚀 APP STARTUP&#xa;app.js" vertex="1">
+          <mxGeometry height="50" width="140" x="600" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-3" edge="1" parent="1" source="XnDh9UWP_Uuky7qgymkK-2" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#0D7377;" target="XnDh9UWP_Uuky7qgymkK-4" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" value="initDashboardCron()&#xa;dashboard.cron.js" vertex="1">
+          <mxGeometry height="50" width="200" x="570" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-5" edge="1" parent="1" source="XnDh9UWP_Uuky7qgymkK-4" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#0D7377;" target="XnDh9UWP_Uuky7qgymkK-6" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="" vertex="1">
+          <mxGeometry height="150" width="940" x="200" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-7" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#6C3483;" value="REGISTRASI CRON JOBS (Saat Startup)" vertex="1">
+          <mxGeometry height="25" width="540" x="400" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" value="generateCronExpression()&#xa;unit: WEEK, interval: 1&#xa;hour: 0, minute: 0&#xa;→ &quot;0 0 */7 * *&quot;" vertex="1">
+          <mxGeometry height="80" width="180" x="220" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-9" edge="1" parent="1" source="XnDh9UWP_Uuky7qgymkK-8" style="endArrow=classic;html=1;strokeWidth=1;strokeColor=#333;" target="XnDh9UWP_Uuky7qgymkK-10" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" value="addCronJob()&#xa;name: &quot;JadwalDokterWeeklySync&quot;&#xa;schedule: &quot;0 0 */7 * *&quot;&#xa;task: JadwalSyncService" vertex="1">
+          <mxGeometry height="80" width="200" x="430" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" value="generateCronExpression()&#xa;unit: WEEK, interval: 1&#xa;hour: 0, minute: 0&#xa;→ &quot;0 0 */7 * *&quot;" vertex="1">
+          <mxGeometry height="80" width="180" x="710" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-12" edge="1" parent="1" source="XnDh9UWP_Uuky7qgymkK-11" style="endArrow=classic;html=1;strokeWidth=1;strokeColor=#333;" target="XnDh9UWP_Uuky7qgymkK-13" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-13" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" value="addCronJob()&#xa;name: &quot;BookingPasienWeeklySync&quot;&#xa;schedule: &quot;0 0 */7 * *&quot;&#xa;task: BookingSyncService" vertex="1">
+          <mxGeometry height="80" width="200" x="920" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=2;" value="✅ Dashboard cron jobs initialized&#xa;(2 jobs registered)" vertex="1">
+          <mxGeometry height="40" width="250" x="545" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-15" edge="1" parent="1" source="XnDh9UWP_Uuky7qgymkK-6" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#0D7377;" target="XnDh9UWP_Uuky7qgymkK-14" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;dashed=1;dashPattern=5 5;" value="" vertex="1">
+          <mxGeometry height="120" width="940" x="200" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-17" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;fontColor=#D35400;" value="⏰ SCHEDULER RUNNING (node-cron) - Menunggu Waktu yang Dijadwalkan" vertex="1">
+          <mxGeometry height="25" width="660" x="340" y="495" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-18" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" value="🕐&#xa;Setiap Minggu&#xa;Jam 00:00" vertex="1">
+          <mxGeometry height="70" width="100" x="280" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-19" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" value="Cek Schedule&#xa;&quot;0 0 */7 * *&quot;&#xa;Match?" vertex="1">
+          <mxGeometry height="80" width="120" x="430" y="525" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-20" edge="1" parent="1" source="XnDh9UWP_Uuky7qgymkK-18" style="endArrow=classic;html=1;strokeWidth=1;strokeColor=#D35400;" target="XnDh9UWP_Uuky7qgymkK-19" value="tick">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-21" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" value="❌ NO&#xa;Tunggu lagi" vertex="1">
+          <mxGeometry height="50" width="90" x="600" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-22" edge="1" parent="1" source="XnDh9UWP_Uuky7qgymkK-19" style="endArrow=classic;html=1;strokeWidth=1;strokeColor=#E74C3C;" target="XnDh9UWP_Uuky7qgymkK-21" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-23" edge="1" parent="1" source="XnDh9UWP_Uuky7qgymkK-21" style="endArrow=classic;html=1;strokeWidth=1;strokeColor=#E74C3C;curved=1;" target="XnDh9UWP_Uuky7qgymkK-18" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="645" y="620" />
+              <mxPoint x="330" y="620" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-24" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" value="✅ YES&#xa;Execute Task!" vertex="1">
+          <mxGeometry height="50" width="90" x="750" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-25" edge="1" parent="1" source="XnDh9UWP_Uuky7qgymkK-21" style="endArrow=classic;html=1;strokeWidth=1;strokeColor=#27AE60;" target="XnDh9UWP_Uuky7qgymkK-24" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-26" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" value="🚀 TRIGGER TASKS" vertex="1">
+          <mxGeometry height="40" width="140" x="900" y="545" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-27" edge="1" parent="1" source="XnDh9UWP_Uuky7qgymkK-24" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#27AE60;" target="XnDh9UWP_Uuky7qgymkK-26" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-28" edge="1" parent="1" source="XnDh9UWP_Uuky7qgymkK-14" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#0D7377;" target="XnDh9UWP_Uuky7qgymkK-16" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-29" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="" vertex="1">
+          <mxGeometry height="200" width="940" x="200" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-30" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#1D8348;" value="TASK EXECUTION (Async)" vertex="1">
+          <mxGeometry height="25" width="340" x="500" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-31" edge="1" parent="1" source="XnDh9UWP_Uuky7qgymkK-26" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#27AE60;exitX=0.5;exitY=1;" target="XnDh9UWP_Uuky7qgymkK-29" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-32" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="" vertex="1">
+          <mxGeometry height="130" width="420" x="230" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-33" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=11;fontStyle=1;fontColor=#B7950B;" value="TASK #1: JadwalDokterWeeklySync" vertex="1">
+          <mxGeometry height="20" width="320" x="280" y="695" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-34" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9;fontFamily=Courier New;" value="[Cron] Memulai Sinkronisasi Mingguan: Jadwal Dokter..." vertex="1">
+          <mxGeometry height="15" width="400" x="240" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-35" edge="1" parent="1" style="endArrow=classic;html=1;strokeWidth=1;strokeColor=#333;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="745" as="sourcePoint" />
+            <mxPoint x="320" y="765" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-36" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=9;" value="await JadwalSyncService.syncJadwalDokter()" vertex="1">
+          <mxGeometry height="25" width="260" x="250" y="755" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-37" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9;fontFamily=Courier New;fontColor=#27AE60;" value="[Cron] ✅ Jadwal Dokter Sync Selesai. Updated: 434" vertex="1">
+          <mxGeometry height="15" width="400" x="240" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-38" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="" vertex="1">
+          <mxGeometry height="130" width="420" x="690" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-39" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=11;fontStyle=1;fontColor=#B7950B;" value="TASK #2: BookingPasienWeeklySync" vertex="1">
+          <mxGeometry height="20" width="320" x="740" y="695" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-40" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9;fontFamily=Courier New;" value="[Cron] Memulai Sinkronisasi Mingguan: Booking Pasien..." vertex="1">
+          <mxGeometry height="15" width="400" x="700" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-41" edge="1" parent="1" style="endArrow=classic;html=1;strokeWidth=1;strokeColor=#333;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="780" y="745" as="sourcePoint" />
+            <mxPoint x="780" y="765" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-42" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=9;" value="await BookingSyncService.syncBooking()" vertex="1">
+          <mxGeometry height="25" width="240" x="710" y="755" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-43" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9;fontFamily=Courier New;fontColor=#27AE60;" value="[Cron] ✅ Booking Pasien Sync Selesai. Updated: 150" vertex="1">
+          <mxGeometry height="15" width="400" x="700" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-44" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" value="" vertex="1">
+          <mxGeometry height="180" width="140" x="40" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-45" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;" value="LEGEND" vertex="1">
+          <mxGeometry height="20" width="100" x="60" y="85" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-46" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=9;" value="Startup" vertex="1">
+          <mxGeometry height="20" width="60" x="50" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-47" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" value="Generate" vertex="1">
+          <mxGeometry height="20" width="55" x="115" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-48" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=9;" value="Register" vertex="1">
+          <mxGeometry height="20" width="60" x="50" y="135" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-49" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=9;" value="Waiting" vertex="1">
+          <mxGeometry height="20" width="55" x="115" y="135" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-50" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=9;" value="Init" vertex="1">
+          <mxGeometry height="20" width="60" x="50" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-51" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=9;" value="Base Service" vertex="1">
+          <mxGeometry height="20" width="55" x="115" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="XnDh9UWP_Uuky7qgymkK-52" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=9;fontFamily=Courier New;align=left;spacingLeft=5;" value="CRON EXPRESSION&lt;br&gt;&lt;br&gt;0 0 */7 * *&lt;br&gt;│ │  │  │ │&lt;br&gt;│ │  │  │ └─ Day of Week (*)&lt;br&gt;│ │  │  └─── Month (*)&lt;br&gt;│ │  └────── Day (*/7 = every 7)&lt;br&gt;│ └───────── Hour (0)&lt;br&gt;└─────────── Minute (0)&lt;br&gt;&lt;br&gt;&lt;a href=&quot;https://cron-checker.com/&quot;&gt;Cron Checker&lt;/a&gt;" vertex="1">
+          <mxGeometry height="150" width="140" x="40" y="280" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

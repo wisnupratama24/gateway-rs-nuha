@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-02-05T06:09:00.000Z" agent="Mozilla/5.0" version="21.0.0" type="device">
+  <diagram name="Installation Flow" id="installation-flow">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="🛠️ ALUR INSTALASI SERVICE - Workshop Gateway RS NUHA" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontStyle=1;fontColor=#0D7377;" vertex="1" parent="1">
+          <mxGeometry x="350" y="20" width="700" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ============ STEP 1: GET SOURCE CODE ============ -->
+        <mxCell id="step1Box" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="700" height="140" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step1Title" value="STEP 1: Dapatkan Source Code" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#1F618D;" vertex="1" parent="1">
+          <mxGeometry x="50" y="85" width="300" height="25" as="geometry" />
+        </mxCell>
+
+        <!-- Option A: Git Clone -->
+        <mxCell id="optionA" value="OPSI A: Git Clone&#xa;&#xa;git clone https://github.com/&#xa;  wisnupratama24/gateway-rs-nuha.git&#xa;&#xa;cd gateway-rs-nuha" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;fontFamily=Courier New;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="115" width="300" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- OR -->
+        <mxCell id="orLabel" value="ATAU" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=12;fontStyle=3;fontColor=#7F8C8D;" vertex="1" parent="1">
+          <mxGeometry x="380" y="150" width="50" height="25" as="geometry" />
+        </mxCell>
+
+        <!-- Option B: Copy Drive -->
+        <mxCell id="optionB" value="OPSI B: Copy dari Drive&#xa;&#xa;1. Download ZIP dari Google Drive&#xa;2. Extract ke folder project&#xa;3. Buka terminal di folder tersebut" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="430" y="115" width="290" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow to Step 2 -->
+        <mxCell id="arrow1" value="" style="endArrow=classic;html=1;strokeWidth=3;strokeColor=#0D7377;" edge="1" parent="1" source="step1Box" target="step2Box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ STEP 2: INSTALL DEPENDENCIES ============ -->
+        <mxCell id="step2Box" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="40" y="250" width="700" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step2Title" value="STEP 2: Install Dependencies" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#1D8348;" vertex="1" parent="1">
+          <mxGeometry x="50" y="255" width="250" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="npmInstall" value="npm install" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontFamily=Courier New;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="290" width="180" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="npmInfo" value="📦 Menginstall semua package dari package.json:&#xa;express, sequelize, pg, redis, axios, node-cron, dotenv, dll." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="260" y="285" width="450" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow to Step 3 -->
+        <mxCell id="arrow2" value="" style="endArrow=classic;html=1;strokeWidth=3;strokeColor=#0D7377;" edge="1" parent="1" source="step2Box" target="step3Box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ STEP 3: SETUP DOCKER ============ -->
+        <mxCell id="step3Box" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="40" y="380" width="700" height="150" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step3Title" value="STEP 3: Setup Docker (PostgreSQL + Redis)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#6C3483;" vertex="1" parent="1">
+          <mxGeometry x="50" y="385" width="350" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dockerCmd" value="docker-compose up -d" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontFamily=Courier New;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="420" width="250" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dockerInfo" value="🐳 Menjalankan container:&#xa;• gateway-nuha-db (PostgreSQL:15) → Port 6001&#xa;• gateway-nuha-redis (Redis:Alpine) → Port 6002" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="330" y="410" width="350" height="55" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dockerCheck" value="docker ps" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="60" y="475" width="120" height="35" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dockerCheckInfo" value="→ Verifikasi container berjalan" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="190" y="480" width="200" height="25" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow to Step 4 -->
+        <mxCell id="arrow3" value="" style="endArrow=classic;html=1;strokeWidth=3;strokeColor=#0D7377;" edge="1" parent="1" source="step3Box" target="step4Box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ STEP 4: SETUP ENV ============ -->
+        <mxCell id="step4Box" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="40" y="560" width="700" height="180" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step4Title" value="STEP 4: Konfigurasi Environment (.env)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#D35400;" vertex="1" parent="1">
+          <mxGeometry x="50" y="565" width="350" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="envCopy" value="copy .env.example .env" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="60" y="600" width="240" height="35" as="geometry" />
+        </mxCell>
+
+        <mxCell id="envEdit" value="Edit file .env sesuai konfigurasi:" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="645" width="200" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="envContent" value="# Database&#xa;DB_HOST=127.0.0.1&#xa;DB_PORT=6001&#xa;DB_USER=postgres&#xa;DB_PASS=postgres&#xa;DB_NAME=gateway_nuha_db&#xa;&#xa;# Redis&#xa;REDIS_HOST=redis://127.0.0.1:6002" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=9;fontFamily=Courier New;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="665" width="220" height="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="envContent2" value="# API External (NUHA SIMRS)&#xa;EXTERNAL_API_URL=http://10.100.2.36:7102&#xa;EXTERNAL_API_TOKEN=eyJhbGci...&#xa;EXTERNAL_API_KEY=KXUN-LIQW...&#xa;EXTERNAL_API_REFRESH_TOKEN=eyJhbGci...&#xa;&#xa;# Server&#xa;PORT_EXPRESS=3033" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=9;fontFamily=Courier New;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="300" y="595" width="300" height="130" as="geometry" />
+        </mxCell>
+
+        <mxCell id="envWarning" value="⚠️ Pastikan token API valid!" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontColor=#E74C3C;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="600" width="200" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- ============ RIGHT SIDE: STEP 5 & 6 ============ -->
+        
+        <!-- Arrow to Step 5 -->
+        <mxCell id="arrow4" value="" style="endArrow=classic;html=1;strokeWidth=3;strokeColor=#0D7377;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="step4Box" target="step5Box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ STEP 5: RUN SERVICE ============ -->
+        <mxCell id="step5Box" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="800" y="80" width="460" height="180" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step5Title" value="STEP 5: Jalankan Service" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#1D8348;" vertex="1" parent="1">
+          <mxGeometry x="810" y="85" width="250" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="runDev" value="npm run dev" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=16;fontFamily=Courier New;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="820" y="120" width="180" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="runInfo" value="🚀 Menjalankan dengan nodemon (auto-reload)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="130" width="250" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="successLog" value="Output yang diharapkan:&#xa;&#xa;Active in port 3033&#xa;Redis 1 Connected&#xa;Redis 2 Connected&#xa;Database OK&#xa;[DashboardCron] ✅ Dashboard cron jobs initialized" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=9;fontFamily=Courier New;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="820" y="180" width="420" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow to Step 6 -->
+        <mxCell id="arrow5" value="" style="endArrow=classic;html=1;strokeWidth=3;strokeColor=#0D7377;" edge="1" parent="1" source="step5Box" target="step6Box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ STEP 6: VERIFY ============ -->
+        <mxCell id="step6Box" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="800" y="290" width="460" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step6Title" value="STEP 6: Verifikasi Service Berjalan" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#1F618D;" vertex="1" parent="1">
+          <mxGeometry x="810" y="295" width="300" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="testHealth" value="Test Health Check:" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="820" y="325" width="150" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="curlHealth" value="curl http://localhost:3033/" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="820" y="350" width="250" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="testSync" value="Test Manual Sync:" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="820" y="390" width="150" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="curlSync" value="curl -X POST http://localhost:3033/dashboard/sync-jadwal" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="820" y="415" width="420" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="expectedResult" value="✅ Expected: {&quot;success&quot;:true, &quot;stats&quot;:{&quot;updated&quot;:434,...}}" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;fontFamily=Courier New;fontColor=#27AE60;" vertex="1" parent="1">
+          <mxGeometry x="820" y="455" width="420" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- ============ DONE BOX ============ -->
+        <mxCell id="doneBox" value="🎉 SERVICE SIAP DIGUNAKAN!&#xa;&#xa;✅ PostgreSQL Connected&#xa;✅ Redis Connected&#xa;✅ Cron Jobs Registered&#xa;✅ API Endpoints Ready" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#27AE60;fontSize=12;fontStyle=1;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="800" y="520" width="460" height="120" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow to Done -->
+        <mxCell id="arrow6" value="" style="endArrow=classic;html=1;strokeWidth=3;strokeColor=#27AE60;" edge="1" parent="1" source="step6Box" target="doneBox">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ TROUBLESHOOTING BOX ============ -->
+        <mxCell id="troubleBox" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="800" y="670" width="460" height="150" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="troubleTitle" value="⚠️ TROUBLESHOOTING" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=12;fontStyle=1;fontColor=#C0392B;" vertex="1" parent="1">
+          <mxGeometry x="810" y="675" width="200" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="trouble1" value="Redis Error: ECONNREFUSED&#xa;→ Cek port di .env (6002 bukan 6379)&#xa;→ docker ps untuk validasi container" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="820" y="700" width="250" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="trouble2" value="Database Error: ECONNREFUSED&#xa;→ Cek DB_PORT (6001 bukan 5432)&#xa;→ Gunakan 127.0.0.1 bukan localhost" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="820" y="755" width="250" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="trouble3" value="Token Error: 400/401&#xa;→ Refresh token dari API NUHA&#xa;→ Update EXTERNAL_API_TOKEN&#xa;  dan EXTERNAL_API_REFRESH_TOKEN" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1070" y="700" width="180" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- ============ PREREQUISITES BOX ============ -->
+        <mxCell id="prereqBox" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="40" y="770" width="700" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="prereqTitle" value="📋 PREREQUISITES (Harus sudah terinstall)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="775" width="350" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="prereq1" value="✓ Node.js v18+" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="805" width="100" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="prereq2" value="✓ npm / yarn" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="170" y="805" width="100" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="prereq3" value="✓ Docker Desktop" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="280" y="805" width="120" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="prereq4" value="✓ Git (optional)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="805" width="100" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="prereq5" value="✓ Text Editor (VS Code)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="530" y="805" width="150" height="20" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

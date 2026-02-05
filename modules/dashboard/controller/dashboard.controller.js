@@ -147,7 +147,7 @@ class DashboardController {
 		return async (req, res, next) => {
 			try {
 				const { tanggal } = req.query;
-
+				console.log(`[DashboardController] Fetching dashboard stats for date: ${tanggal || "today"}`);
 				// Get stats dari Dashboard Service (dengan JOIN queries)
 				const stats = await DashboardService.getDashboardStats(tanggal);
 
