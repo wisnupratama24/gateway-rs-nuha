@@ -76,51 +76,23 @@ module.exports = {
 
 	/**
 	 * ========================================
-	 * SYNC TYPE 2: BOOKING PASIEN
+	 * TODO: WORKSHOP EXERCISE - BOOKING PASIEN
 	 * ========================================
 	 *
-	 * Sinkronisasi data booking/registrasi pasien
-	 * - Digunakan untuk dashboard booking
-	 * - Group by: Status, Asuransi, Dokter, Spesialis
-	 * - Schedule: Weekly (Minggu 00:00)
+	 * Peserta akan menambahkan config BOOKING_PASIEN di sini.
+	 * Lihat panduan di docs/WORKSHOP_HANDS_ON.md Step 4
+	 *
+	 * Hint:
+	 * - id_laporan_view: 239
+	 * - dateFields: waktu_registrasi_awal, waktu_registrasi_akhir
+	 * - modelName: dashboard_239
+	 * - uniqueKeys: booking_id
 	 */
-	BOOKING_PASIEN: {
-		// ID Laporan di API Eksternal
-		id_laporan_view: 239,
-
-		// Mapping field tanggal untuk request API
-		dateFields: {
-			start: "waktu_registrasi_awal", // Field waktu registrasi mulai
-			end: "waktu_registrasi_akhir", // Field waktu registrasi akhir
-		},
-
-		// Nama model Sequelize
-		modelName: "dashboard_239",
-
-		// Field yang menjadi UNIQUE KEY untuk UPSERT
-		uniqueKeys: ["booking_id"],
-
-		// Deskripsi sync type
-		description: "Sinkronisasi data booking/registrasi pasien",
-
-		// Default range tanggal (hari)
-		defaultDaysRange: 14, // Sync 14 hari ke depan
-	},
 
 	/**
 	 * ========================================
 	 * HELPER: Get Config by Type
 	 * ========================================
-	 *
-	 * Utility function untuk get config berdasarkan sync type
-	 *
-	 * @param {string} syncType - 'JADWAL_DOKTER' atau 'BOOKING_PASIEN'
-	 * @returns {object} Config object
-	 *
-	 * Usage:
-	 * ```
-	 * const config = SYNC_CONFIG.getConfig('JADWAL_DOKTER');
-	 * ```
 	 */
 	getConfig(syncType) {
 		if (!this[syncType]) {
@@ -133,19 +105,8 @@ module.exports = {
 	 * ========================================
 	 * HELPER: Get All Sync Types
 	 * ========================================
-	 *
-	 * Utility untuk mendapatkan semua sync types yang tersedia
-	 *
-	 * @returns {array} Array of sync type names
-	 *
-	 * Usage:
-	 * ```
-	 * const types = SYNC_CONFIG.getAllTypes();
-	 * // Returns: ['JADWAL_DOKTER', 'BOOKING_PASIEN']
-	 * ```
 	 */
 	getAllTypes() {
-		// Filter hanya property yang bukan function
 		return Object.keys(this).filter((key) => typeof this[key] !== "function");
 	},
 };
