@@ -164,11 +164,9 @@ class BaseSyncService {
 			if (stats.failed_records.length > 0) {
 				console.warn(`[BaseSyncService] Failed records:`, JSON.stringify(stats.failed_records, null, 2));
 			}
-
-			// Hapus failed_records dari return (terlalu besar)
-			const { returnStats } = stats;
-
-			return returnStats;
+			delete stats.failed_records;
+			delete stats.failed;
+			return stats;
 		} catch (error) {
 			// ========================================
 			// ERROR HANDLING
