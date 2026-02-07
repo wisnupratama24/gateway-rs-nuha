@@ -211,7 +211,12 @@ CREATE INDEX IF NOT EXISTS idx_dashboard_239_asuransi ON public.dashboard_239(as
 ```bash
 # Via DBeaver/Navicat: Execute SQL file
 # Atau via command line:
-docker exec -i gateway-nuha-db psql -U postgres -d gateway_nuha_db < migrations/create_dashboard_239.sql
+
+# Linux/Mac/Git Bash:
+docker exec -i gateway-nuha-db psql -U postgres -d gateway_nuha_db < docs/migration_dashboard_multi_sync.sql
+
+# PowerShell (Windows):
+Get-Content docs/migration_dashboard_multi_sync.sql | docker exec -i gateway-nuha-db psql -U postgres -d gateway_nuha_db
 ```
 
 ---
