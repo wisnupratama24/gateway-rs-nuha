@@ -77,6 +77,8 @@ class BaseSyncService {
 			inserted: 0, // Jumlah record baru yang di-INSERT
 			updated: 0, // Jumlah record existing yang di-UPDATE
 			total_fetched: 0, // Total record yang di-fetch dari API
+			failed: 0, // Jumlah record yang gagal di-upsert
+			failed_records: [], // List record yang gagal (untuk debugging)
 		};
 
 		// ========================================
@@ -156,8 +158,17 @@ class BaseSyncService {
 			console.log(`[BaseSyncService] Total fetched: ${stats.total_fetched}`);
 			console.log(`[BaseSyncService] Inserted: ${stats.inserted}`);
 			console.log(`[BaseSyncService] Updated: ${stats.updated}`);
+			console.log(`[BaseSyncService] Failed: ${stats.failed}`);
 
-			return stats;
+			// Log failed records jika ada
+			if (stats.failed_records.length > 0) {
+				console.warn(`[BaseSyncService] Failed records:`, JSON.stringify(stats.failed_records, null, 2));
+			}
+
+			// Hapus failed_records dari return (terlalu besar)
+			const { returnStats } = stats;
+
+			return returnStats;
 		} catch (error) {
 			// ========================================
 			// ERROR HANDLING
@@ -198,25 +209,52 @@ class BaseSyncService {
 			const dataToSave = mapFunction(record);
 
 			// -------------------------------------
-			// STEP 2: Sequelize UPSERT
+			// STEP 2: Cek apakah record sudah ada
 			// -------------------------------------
-			// Return: [instance, created]
-			// - instance: Record yang ter-insert/update
-			// - created: boolean (true = INSERT, false = UPDATE)
-			const [, created] = await Model.upsert(dataToSave);
+			// Karena PostgreSQL upsert tidak reliable untuk deteksi created,
+			// kita cari dulu apakah record sudah ada berdasarkan unique constraint
+			// Ambil unique keys dari model indexes
+			const modelIndexes = Model.options?.indexes || [];
+			const uniqueIndex = modelIndexes.find((idx) => idx.unique);
+			let whereClause = {};
+
+			if (uniqueIndex && uniqueIndex.fields) {
+				// Bangun where clause dari unique fields
+				for (const field of uniqueIndex.fields) {
+					if (dataToSave[field] !== undefined) {
+						whereClause[field] = dataToSave[field];
+					}
+				}
+			}
+
+			// Cek apakah record sudah ada
+			const existingCount = Object.keys(whereClause).length > 0 ? await Model.count({ where: whereClause }) : 0;
+			const isNewRecord = existingCount === 0;
 
 			// -------------------------------------
-			// STEP 3: Update Stats
+			// STEP 3: Sequelize UPSERT
 			// -------------------------------------
-			if (created) {
+			await Model.upsert(dataToSave);
+
+			// -------------------------------------
+			// STEP 4: Update Stats berdasarkan check sebelumnya
+			// -------------------------------------
+			if (isNewRecord) {
 				stats.inserted++; // Record baru
 			} else {
 				stats.updated++; // Record existing (ter-update)
 			}
 		} catch (error) {
-			// Log error tapi tidak throw (skip record yang bermasalah)
-			// Ini prevent 1 record rusak membatalkan seluruh sync
+			// Log error dan track record yang gagal
 			console.error(`[BaseSyncService] Gagal simpan record:`, error.message);
+			stats.failed++;
+			// Simpan sample record yang gagal (max 10)
+			if (stats.failed_records.length < 10) {
+				stats.failed_records.push({
+					error: error.message,
+					record_sample: JSON.stringify(record).substring(0, 200),
+				});
+			}
 		}
 	}
 }
