@@ -13,7 +13,6 @@ const { DB } = require("./config/db/index");
 let { CLIENT_1, CLIENT_2 } = require("./config/redis/index");
 const SESSION = require("express-session");
 const { RedisStore } = require("connect-redis");
-const { initDashboardCron } = require("./modules/dashboard/cron/dashboard.cron");
 
 const APP = EXPRESS();
 const HTTP = require("http");
@@ -195,8 +194,6 @@ SERVER.listen(PORT, async () => {
 		await DB.authenticate()
 			.then(async () => {
 				console.log("Database OK");
-				// Init Cron Jobs
-				initDashboardCron();
 			})
 			.catch((error) => {
 				console.error("Database Error", error);
