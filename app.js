@@ -11,15 +11,22 @@ MORGAN.token("date", function () {
 
 const { DB } = require("./config/db/index");
 let { CLIENT_1, CLIENT_2 } = require("./config/redis/index");
-const SESSION = require("express-session");
-const { RedisStore } = require("connect-redis");
+// const SESSION = require("express-session");
+// const { RedisStore } = require("connect-redis");
 const { initDashboardCron } = require("./modules/dashboard/cron/dashboard.cron");
 
 const APP = EXPRESS();
 const HTTP = require("http");
 const SERVER = HTTP.createServer(APP);
 const WEB_SOCKET = require("./config/socket/index");
-const { PORT_EXPRESS, KEY_JWT, ALLOWED_ORIGINS, ALLOWED_IPS, HTTPS_ONLY, BODY_PARSER_LIMIT } = require("./helpers/env/envConfig");
+const {
+	PORT_EXPRESS,
+	// KEY_JWT,
+	ALLOWED_ORIGINS,
+	ALLOWED_IPS,
+	HTTPS_ONLY,
+	BODY_PARSER_LIMIT,
+} = require("./helpers/env/envConfig");
 
 const PORT = PORT_EXPRESS || 999;
 
@@ -164,26 +171,26 @@ APP.use((req, res, next) => {
 
 WEB_SOCKET(SERVER);
 
-const store = new RedisStore({ client: CLIENT_1 });
+// const store = new RedisStore({ client: CLIENT_1 });
 
-// Session configuration - enhanced security
-const isProduction = process.env.APP_ENV === "PROD";
-APP.use(
-	SESSION({
-		store,
-		secret: KEY_JWT,
-		name: "sessionId", // Don't use default session name
-		resave: false,
-		saveUninitialized: false,
-		cookie: {
-			secure: isProduction, // Only send over HTTPS in production
-			httpOnly: true, // Prevent XSS attacks
-			sameSite: isProduction ? "strict" : "lax", // CSRF protection
-			maxAge: 24 * 60 * 60 * 1000, // 24 hours
-		},
-		rolling: true, // Reset expiration on activity
-	}),
-);
+// // Session configuration - enhanced security
+// const isProduction = process.env.APP_ENV === "PROD";
+// APP.use(
+// 	SESSION({
+// 		store,
+// 		secret: KEY_JWT,
+// 		name: "sessionId", // Don't use default session name
+// 		resave: false,
+// 		saveUninitialized: false,
+// 		cookie: {
+// 			secure: isProduction, // Only send over HTTPS in production
+// 			httpOnly: true, // Prevent XSS attacks
+// 			sameSite: isProduction ? "strict" : "lax", // CSRF protection
+// 			maxAge: 24 * 60 * 60 * 1000, // 24 hours
+// 		},
+// 		rolling: true, // Reset expiration on activity
+// 	}),
+// );
 
 // listen on the specified port
 SERVER.listen(PORT, async () => {

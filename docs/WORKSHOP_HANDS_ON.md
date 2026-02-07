@@ -25,7 +25,21 @@ Sebelum coding, pahami dulu struktur data dari API.
 
 ```bash
 # Gunakan endpoint yang sudah ada untuk test
-curl http://localhost:3033/dokter/view-table
+curl --location --globoff '{{base_url}}/v3/view/view-table/list-filter-access' \
+--header 'Accept: application/json, text/plain, */*' \
+--header 'Accept-Language: id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7' \
+--header 'Connection: keep-alive' \
+--header 'Content-Type: application/json' \
+--header 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' \
+--header 'token: {{token}}' \
+--header 'x-api-key: {{api_key}}' \
+--data '{
+    "id_laporan_view": 239,
+    "pages": 1,
+    "limit": 10,
+    "waktu_registrasi_awal": "2026-02-01T17:00:00+00:00",
+    "waktu_registrasi_akhir": "2026-02-10T17:00:00+00:00"
+}'
 ```
 
 ### 1.2 Struktur Response Booking (id_laporan_view: 239)
@@ -54,13 +68,19 @@ curl http://localhost:3033/dokter/view-table
 
 ### 1.3 Field Penting untuk Booking
 
-| Field | Type | Keterangan |
-|-------|------|------------|
-| `booking_id` | INT | Primary Key (Unique) |
-| `id_dokter` | INT | FK ke dashboard_123 |
-| `tanggal_antrian` | DATE | Tanggal booking |
-| `status_booking` | VARCHAR | Status: Aktif/Batal/dll |
-| `mulai` / `selesai` | TIME | Jam appointment |
+| Kategori | Field | Type | Keterangan |
+| -------- | ----- | ---- | ---------- |
+| **Key** | `booking_id` | INT | Primary Key (Unique dari API) |
+| **Pasien** | `no_rm`, `nama_rm`, `nik_rm` | VARCHAR | Data rekam medis pasien |
+| **Kontak** | `telepon`, `no_hp` | VARCHAR | Nomor kontak pasien |
+| **Status** | `status_booking`, `status_registrasi` | VARCHAR | Status booking/registrasi |
+| **Antrian** | `tanggal_antrian`, `antrian` | TIMESTAMP, VARCHAR | Info antrian pasien |
+| **Asuransi** | `asuransi`, `no_asuransi`, `no_rujukan` | VARCHAR | Data penjamin |
+| **Dokter** | `id_dokter`, `dokter`, `id_spesialis`, `spesialis` | INT, VARCHAR | Info dokter & spesialis |
+| **Jadwal** | `hari`, `mulai`, `selesai` | VARCHAR | Jadwal appointment |
+| **Kuota** | `kuota`, `kuota_jkn`, `kuota_vip` | INT | Kuota slot |
+
+> **Note:** Total ada **40+ field** di tabel ini. Lihat `migration_dashboard_multi_sync.sql` untuk daftar lengkap.
 
 ---
 
@@ -71,44 +91,83 @@ curl http://localhost:3033/dokter/view-table
 Buat file baru: `migrations/create_dashboard_239.sql`
 
 ```sql
--- ========================================
--- TABEL: dashboard_239 (Booking Pasien)
--- ========================================
+-- File: docs/migration_dashboard_multi_sync.sql (bagian dashboard_239)
+-- Jalankan file lengkap yang sudah disediakan!
 
-CREATE TABLE IF NOT EXISTS dashboard_239 (
-    -- Primary Key
-    id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS public.dashboard_239 (
+    -- PRIMARY KEY
+    id SERIAL4 PRIMARY KEY,
     
-    -- Unique identifier dari API
-    booking_id INTEGER UNIQUE NOT NULL,
+    -- UNIQUE KEY: booking_id (dari API)
+    booking_id INTEGER NOT NULL UNIQUE,
     
-    -- Data Dokter
-    id_dokter INTEGER,
-    nama_dokter VARCHAR(255),
-    nama_spesialis VARCHAR(255),
-    
-    -- Data Pasien
+    -- DATA TAGIHAN & PASIEN
+    id_tagihan INTEGER,
     no_rm VARCHAR(50),
-    nama_pasien VARCHAR(255),
+    nama_rm VARCHAR(255),
+    nik_rm VARCHAR(50),
+    telepon VARCHAR(50),
+    no_hp VARCHAR(50),
     
-    -- Data Booking
-    tanggal_antrian DATE,
-    mulai TIME,
-    selesai TIME,
+    -- STATUS & REGISTRASI
     status_booking VARCHAR(50),
+    status_registrasi VARCHAR(100),
+    tanggal_registrasi_filter TIMESTAMP,
+    status_rekam_medis VARCHAR(100),
     
-    -- Asuransi
-    nama_penjamin VARCHAR(255),
+    -- ANTRIAN & BOOKING INFO
+    tanggal_antrian TIMESTAMP,
+    antrian VARCHAR(50),
+    asal_booking VARCHAR(50),
     
-    -- Metadata
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    -- ASURANSI & RUJUKAN
+    no_asuransi VARCHAR(100),
+    no_rujukan VARCHAR(100),
+    no_kontrol VARCHAR(100),
+    asuransi VARCHAR(100),
+    
+    -- SPESIALIS & DOKTER INFO
+    code VARCHAR(50),               -- kode_spesialis
+    id_spesialis INTEGER,
+    spesialis VARCHAR(100),
+    id_jadwal_dokter INTEGER,
+    id_dokter INTEGER,
+    dokter VARCHAR(255),
+    poliklinik VARCHAR(100),
+    
+    -- JADWAL PRAKTIK
+    hari VARCHAR(20),
+    mulai VARCHAR(10),              -- jam mulai
+    selesai VARCHAR(10),            -- jam selesai
+    
+    -- KUOTA
+    kuota INTEGER,
+    kuota_jkn INTEGER,
+    kuota_vip INTEGER,
+    
+    -- CATATAN & ALASAN
+    catatan TEXT,
+    alasan_batal TEXT,
+    
+    -- METADATA SISTEM
+    versi VARCHAR(10),
+    inserted_user VARCHAR(100),
+    inserted_date TIMESTAMP,
+    updated_user VARCHAR(100),
+    update_date TIMESTAMP,
+    
+    -- TIMESTAMPS SYNC
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    last_synced_at TIMESTAMP DEFAULT NOW()
 );
 
--- Index untuk query performa
-CREATE INDEX IF NOT EXISTS idx_d239_dokter ON dashboard_239(id_dokter);
-CREATE INDEX IF NOT EXISTS idx_d239_tanggal ON dashboard_239(tanggal_antrian);
-CREATE INDEX IF NOT EXISTS idx_d239_status ON dashboard_239(status_booking);
+-- INDEXES
+CREATE INDEX IF NOT EXISTS idx_dashboard_239_tanggal_antrian ON public.dashboard_239(tanggal_antrian);
+CREATE INDEX IF NOT EXISTS idx_dashboard_239_status_booking ON public.dashboard_239(status_booking);
+CREATE INDEX IF NOT EXISTS idx_dashboard_239_id_dokter ON public.dashboard_239(id_dokter);
+CREATE INDEX IF NOT EXISTS idx_dashboard_239_id_spesialis ON public.dashboard_239(id_spesialis);
+CREATE INDEX IF NOT EXISTS idx_dashboard_239_asuransi ON public.dashboard_239(asuransi);
 ```
 
 ### 2.2 Jalankan Migration
@@ -137,45 +196,166 @@ const { DB } = require("../../config/db/index");
 const Dashboard239 = DB.define(
     "dashboard_239",
     {
+        // ========================================
+        // PRIMARY KEY
+        // ========================================
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
         },
+        // ========================================
+        // UNIQUE KEY: booking_id (dari API)
+        // ========================================
         booking_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             unique: true,
         },
-        id_dokter: {
+        // ========================================
+        // DATA TAGIHAN & PASIEN
+        // ========================================
+        id_tagihan: {
             type: DataTypes.INTEGER,
-        },
-        nama_dokter: {
-            type: DataTypes.STRING(255),
-        },
-        nama_spesialis: {
-            type: DataTypes.STRING(255),
         },
         no_rm: {
             type: DataTypes.STRING(50),
         },
-        nama_pasien: {
+        nama_rm: {
             type: DataTypes.STRING(255),
         },
-        tanggal_antrian: {
-            type: DataTypes.DATEONLY,
+        nik_rm: {
+            type: DataTypes.STRING(50),
         },
-        mulai: {
-            type: DataTypes.TIME,
+        telepon: {
+            type: DataTypes.STRING(50),
         },
-        selesai: {
-            type: DataTypes.TIME,
+        no_hp: {
+            type: DataTypes.STRING(50),
         },
+        // ========================================
+        // STATUS & REGISTRASI
+        // ========================================
         status_booking: {
             type: DataTypes.STRING(50),
         },
-        nama_penjamin: {
+        status_registrasi: {
+            type: DataTypes.STRING(100),
+        },
+        tanggal_registrasi_filter: {
+            type: DataTypes.DATE,
+        },
+        status_rekam_medis: {
+            type: DataTypes.STRING(100),
+        },
+        // ========================================
+        // ANTRIAN & BOOKING INFO
+        // ========================================
+        tanggal_antrian: {
+            type: DataTypes.DATE,
+        },
+        antrian: {
+            type: DataTypes.STRING(50),
+        },
+        asal_booking: {
+            type: DataTypes.STRING(50),
+        },
+        // ========================================
+        // ASURANSI & RUJUKAN
+        // ========================================
+        no_asuransi: {
+            type: DataTypes.STRING(100),
+        },
+        no_rujukan: {
+            type: DataTypes.STRING(100),
+        },
+        no_kontrol: {
+            type: DataTypes.STRING(100),
+        },
+        asuransi: {
+            type: DataTypes.STRING(100),
+        },
+        // ========================================
+        // SPESIALIS & DOKTER INFO
+        // ========================================
+        code: {
+            type: DataTypes.STRING(50),     // kode_spesialis
+        },
+        id_spesialis: {
+            type: DataTypes.INTEGER,
+        },
+        spesialis: {
+            type: DataTypes.STRING(100),
+        },
+        id_jadwal_dokter: {
+            type: DataTypes.INTEGER,
+        },
+        id_dokter: {
+            type: DataTypes.INTEGER,
+        },
+        dokter: {
             type: DataTypes.STRING(255),
+        },
+        poliklinik: {
+            type: DataTypes.STRING(100),
+        },
+        // ========================================
+        // JADWAL PRAKTIK
+        // ========================================
+        hari: {
+            type: DataTypes.STRING(20),
+        },
+        mulai: {
+            type: DataTypes.STRING(10),     // jam mulai
+        },
+        selesai: {
+            type: DataTypes.STRING(10),     // jam selesai
+        },
+        // ========================================
+        // KUOTA
+        // ========================================
+        kuota: {
+            type: DataTypes.INTEGER,
+        },
+        kuota_jkn: {
+            type: DataTypes.INTEGER,
+        },
+        kuota_vip: {
+            type: DataTypes.INTEGER,
+        },
+        // ========================================
+        // CATATAN & ALASAN
+        // ========================================
+        catatan: {
+            type: DataTypes.TEXT,
+        },
+        alasan_batal: {
+            type: DataTypes.TEXT,
+        },
+        // ========================================
+        // METADATA SISTEM
+        // ========================================
+        versi: {
+            type: DataTypes.STRING(10),
+        },
+        inserted_user: {
+            type: DataTypes.STRING(100),
+        },
+        inserted_date: {
+            type: DataTypes.DATE,
+        },
+        updated_user: {
+            type: DataTypes.STRING(100),
+        },
+        update_date: {
+            type: DataTypes.DATE,
+        },
+        // ========================================
+        // TIMESTAMPS SYNC (Dikelola oleh sistem sync)
+        // ========================================
+        last_synced_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
         },
     },
     {
@@ -250,20 +430,58 @@ class BookingSyncService extends BaseSyncService {
 
     /**
      * Mapping function: API Response → Model fields
+     * Memetakan semua field dari response API ke field tabel database
      */
     mapBookingData(booking) {
         return {
+            // UNIQUE KEY
             booking_id: booking.booking_id,
-            id_dokter: booking.id_dokter,
-            nama_dokter: booking.nama_dokter,
-            nama_spesialis: booking.nama_spesialis,
+            // DATA TAGIHAN & PASIEN
+            id_tagihan: booking.id_tagihan,
             no_rm: booking.no_rm,
-            nama_pasien: booking.nama_pasien,
+            nama_rm: booking.nama_rm,
+            nik_rm: booking.nik_rm,
+            telepon: booking.telepon,
+            no_hp: booking.no_hp,
+            // STATUS & REGISTRASI
+            status_booking: booking.status_booking,
+            status_registrasi: booking.status_registrasi,
+            tanggal_registrasi_filter: booking.tanggal_registrasi_filter,
+            status_rekam_medis: booking.status_rekam_medis,
+            // ANTRIAN & BOOKING INFO
             tanggal_antrian: booking.tanggal_antrian,
+            antrian: booking.antrian,
+            asal_booking: booking.asal_booking,
+            // ASURANSI & RUJUKAN
+            no_asuransi: booking.no_asuransi,
+            no_rujukan: booking.no_rujukan,
+            no_kontrol: booking.no_kontrol,
+            asuransi: booking.asuransi,
+            // SPESIALIS & DOKTER INFO
+            code: booking.code,
+            id_spesialis: booking.id_spesialis,
+            spesialis: booking.spesialis,
+            id_jadwal_dokter: booking.id_jadwal_dokter,
+            id_dokter: booking.id_dokter,
+            dokter: booking.dokter,
+            poliklinik: booking.poliklinik,
+            // JADWAL PRAKTIK
+            hari: booking.hari,
             mulai: booking.mulai,
             selesai: booking.selesai,
-            status_booking: booking.status_booking,
-            nama_penjamin: booking.nama_penjamin,
+            // KUOTA
+            kuota: booking.kuota,
+            kuota_jkn: booking.kuota_jkn,
+            kuota_vip: booking.kuota_vip,
+            // CATATAN & ALASAN
+            catatan: booking.catatan,
+            alasan_batal: booking.alasan_batal,
+            // METADATA SISTEM
+            versi: booking.versi,
+            inserted_user: booking.inserted_user,
+            inserted_date: booking.inserted_date,
+            updated_user: booking.updated_user,
+            update_date: booking.update_date,
         };
     }
 }
@@ -361,6 +579,8 @@ SELECT * FROM dashboard_239 LIMIT 5;
 
 Buka `modules/dashboard/service/dashboard.service.js` dan tambahkan method:
 
+### 9.1 Get Booking by Doctor
+
 ```javascript
 /**
  * Get Booking by Doctor (JOIN query)
@@ -395,7 +615,42 @@ static async _getBookingByDoctor(targetDate) {
 }
 ```
 
-Kemudian panggil di `getDashboardStats()` dan tambahkan ke return object.
+### 9.2 Get Booking by Specialization
+
+```javascript
+/**
+ * Get Booking by Specialization (JOIN query)
+ */
+static async _getBookingBySpecialization(targetDate) {
+    const results = await DB.query(
+        `
+        SELECT 
+            d239.id_spesialis as specialization_id,
+            d239.spesialis as specialization_name,
+            COUNT(d239.booking_id) as bookings
+        FROM dashboard_239 d239
+        WHERE DATE(d239.tanggal_antrian) = :targetDate
+            AND d239.status_booking = 'Aktif'
+        GROUP BY d239.id_spesialis, d239.spesialis
+        ORDER BY bookings DESC
+        `,
+        {
+            replacements: { targetDate },
+            type: DB.QueryTypes.SELECT,
+        }
+    );
+
+    return results.map((row) => ({
+        specializationId: String(row.specialization_id),
+        specializationName: row.specialization_name,
+        bookings: parseInt(row.bookings),
+    }));
+}
+```
+
+### 9.3 Integrasikan ke getDashboardStats()
+
+Panggil kedua method di `getDashboardStats()` dan tambahkan ke return object:
 
 ---
 
