@@ -46,23 +46,215 @@ curl --location --globoff '{{base_url}}/v3/view/view-table/list-filter-access' \
 
 ```json
 {
-  "count": 434,
-  "limit": 10,
-  "page": 1,
-  "list": [
-    {
-      "booking_id": 1435755,
-      "id_dokter": 48,
-      "nama_dokter": "dr. Ahmad",
-      "no_rm": "00123456",
-      "nama_pasien": "Budi Santoso",
-      "status_booking": "Aktif",
-      "tanggal_antrian": "2026-02-06",
-      "mulai": "08:00:00",
-      "selesai": "08:15:00",
-      // ... 37 fields total
+    "data": {
+        "list": [
+            {
+                "booking_id": 1435748,
+                "id_tagihan": null,
+                "no_rm": "001165653",
+                "nama_rm": "SUKATI B ASMAJA",
+                "nik_rm": "3671096006710002",
+                "telepon": "081289359266",
+                "no_hp": "083198307260",
+                "status_booking": "Aktif",
+                "status_registrasi": "Belum Registrasi",
+                "tanggal_registrasi_filter": "2026-02-02T00:00:00.000Z",
+                "status_rekam_medis": "Terdaftar",
+                "tanggal_antrian": "2026-02-02 07:00:00",
+                "antrian": "BE - 6",
+                "asal_booking": "Mobile JKN",
+                "no_asuransi": "0001863246374",
+                "no_rujukan": "102504031225Y003977",
+                "no_kontrol": "0223R0170126K000634",
+                "asuransi": "BPJS",
+                "code": "INT",
+                "id_spesialis": 6,
+                "spesialis": "PENYAKIT DALAM ",
+                "id_jadwal_dokter": 118,
+                "id_dokter": 56,
+                "dokter": "dr. Maya Wuninggar Ingrum, SpPD",
+                "poliklinik": "POLI 2 (PENYAKIT DALAM) NURSE STATION 2A",
+                "hari": "senin",
+                "mulai": "14:30",
+                "selesai": "22:00",
+                "kuota": 85,
+                "kuota_jkn": 75,
+                "kuota_vip": 5,
+                "catatan": "-",
+                "alasan_batal": null,
+                "versi": "3.0",
+                "inserted_user": "-",
+                "inserted_date": "2026-01-19 02:41:38",
+                "updated_user": "-",
+                "update_date": "2026-01-19 02:41:38"
+            }
+        ],
+        "headers": [
+            {
+                "label": "Booking ID",
+                "value": "booking_id"
+            },
+            {
+                "label": "ID Tagihan",
+                "value": "id_tagihan"
+            },
+            {
+                "label": "No RM",
+                "value": "no_rm"
+            },
+            {
+                "label": "Nama Pasien",
+                "value": "nama_rm"
+            },
+            {
+                "label": "NIK RM",
+                "value": "nik_rm"
+            },
+            {
+                "label": "Telepon",
+                "value": "telepon"
+            },
+            {
+                "label": "No HP",
+                "value": "no_hp"
+            },
+            {
+                "label": "Status Booking",
+                "value": "status_booking"
+            },
+            {
+                "label": "Status Registrasi",
+                "value": "status_registrasi"
+            },
+            {
+                "label": "Status Rekam Medis",
+                "value": "status_rekam_medis"
+            },
+            {
+                "label": "Tanggal Antrian",
+                "value": "tanggal_antrian"
+            },
+            {
+                "label": "Antrian",
+                "value": "antrian"
+            },
+            {
+                "label": "Asal Booking",
+                "value": "asal_booking"
+            },
+            {
+                "label": "No Asuransi",
+                "value": "no_asuransi"
+            },
+            {
+                "label": "No Rujukan",
+                "value": "no_rujukan"
+            },
+            {
+                "label": "No Kontrol",
+                "value": "no_kontrol"
+            },
+            {
+                "label": "Asuransi",
+                "value": "asuransi"
+            },
+            {
+                "label": "Kode Spesialis",
+                "value": "code"
+            },
+            {
+                "label": "ID Spesialis",
+                "value": "id_spesialis"
+            },
+            {
+                "label": "Spesialis",
+                "value": "spesialis"
+            },
+            {
+                "label": "ID Jadwal Dokter",
+                "value": "id_jadwal_dokter"
+            },
+            {
+                "label": "ID Dokter",
+                "value": "id_dokter"
+            },
+            {
+                "label": "Dokter",
+                "value": "dokter"
+            },
+            {
+                "label": "Poliklinik",
+                "value": "poliklinik"
+            },
+            {
+                "label": "Hari",
+                "value": "hari"
+            },
+            {
+                "label": "Mulai",
+                "value": "mulai"
+            },
+            {
+                "label": "Selesai",
+                "value": "selesai"
+            },
+            {
+                "label": "Kuota",
+                "value": "kuota"
+            },
+            {
+                "label": "Kuota JKN",
+                "value": "kuota_jkn"
+            },
+            {
+                "label": "Kuota VIP",
+                "value": "kuota_vip"
+            },
+            {
+                "label": "Catatan",
+                "value": "catatan"
+            },
+            {
+                "label": "Alasan Batal",
+                "value": "alasan_batal"
+            },
+            {
+                "label": "Versi",
+                "value": "versi"
+            },
+            {
+                "label": "User Pembuat",
+                "value": "inserted_user"
+            },
+            {
+                "label": "Tanggal Pembuat",
+                "value": "inserted_date"
+            },
+            {
+                "label": "User Update",
+                "value": "updated_user"
+            },
+            {
+                "label": "Tanggal Update",
+                "value": "update_date"
+            }
+        ],
+        "parameters": {
+            "waktu_registrasi_awal": "2026-02-01T17:00:00+00:00",
+            "waktu_registrasi_akhir": "2026-02-10T17:00:00+00:00",
+            "id_dokter": null,
+            "kode_spesialis": null
+        },
+        "meta_data": {
+            "count": 174,
+            "pages": 1,
+            "limit": 1
+        }
+    },
+    "meta_data": {
+        "status": 200,
+        "message": "Berhasil"
     }
-  ]
 }
 ```
 
