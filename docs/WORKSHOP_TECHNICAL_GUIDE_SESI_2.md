@@ -101,8 +101,8 @@ docker-compose up -d
 ```
 
 🐳 Ini akan menjalankan container:
-- **gateway-nuha-db** (PostgreSQL:15) → Port `6001`
-- **gateway-nuha-redis** (Redis:Alpine) → Port `6002`
+- **gateway-nuha-db** (PostgreSQL:15) → Port `6000`
+- **gateway-nuha-redis** (Redis:Alpine) → Port `6001`
 
 **Verifikasi container berjalan:**
 ```bash
@@ -124,13 +124,13 @@ TIMEZONE=Asia/Jakarta
 
 # Database PostgreSQL (⚠️ Perhatikan port Docker!)
 DB_HOST=127.0.0.1
-DB_PORT=6001
+DB_PORT=6000
 DB_USER=postgres
 DB_PASS=postgres
 DB_NAME=gateway_nuha_db
 
 # Redis (⚠️ Perhatikan port Docker!)
-REDIS_HOST=redis://127.0.0.1:6002
+REDIS_HOST=redis://127.0.0.1:6001
 
 # API External (NUHA SIMRS)
 EXTERNAL_API_URL=http://10.100.2.36:7102
@@ -141,13 +141,13 @@ EXTERNAL_API_REFRESH_TOKEN=<refresh_token_dari_admin>
 
 > ⚠️ **PENTING:** 
 > - Gunakan `127.0.0.1` bukan `localhost` (menghindari IPv6 issue di Windows)
-> - Port database adalah `6001` (bukan 5432) sesuai Docker mapping
-> - Port redis adalah `6002` (bukan 6379) sesuai Docker mapping
+> - Port database adalah `6000` (bukan 5432) sesuai Docker mapping
+> - Port redis adalah `6001` (bukan 6379) sesuai Docker mapping
 
 ### Step 5: Jalankan Migration Database
 
 **Via DBeaver / Navicat:**
-1. Buat koneksi ke PostgreSQL (`127.0.0.1:6001`)
+1. Buat koneksi ke PostgreSQL (`127.0.0.1:6000`)
 2. Buka database `gateway_nuha_db`
 3. Execute SQL file: `migration_dashboard_multi_sync.sql`
 
@@ -495,9 +495,9 @@ Error: connect ECONNREFUSED 127.0.0.1:6379
 ```
 
 **Solusi:**
-1. Cek port di `.env` → gunakan `6002` (bukan 6379)
+1. Cek port di `.env` → gunakan `6001` (bukan 6379)
 2. Pastikan container redis running: `docker ps`
-3. Gunakan `127.0.0.1` bukan `localhost`
+3. Gunakan `127.0.0.1` atau `localhost`
 
 ### ❌ Database Error: ECONNREFUSED
 
@@ -506,7 +506,7 @@ Error: connect ECONNREFUSED ::1:5432
 ```
 
 **Solusi:**
-1. Cek `DB_PORT` di `.env` → gunakan `6001` (bukan 5432)
+1. Cek `DB_PORT` di `.env` → gunakan `6000` (bukan 5432)
 2. Cek `DB_HOST` → gunakan `127.0.0.1` (bukan localhost)
 3. Pastikan container db running: `docker ps`
 
